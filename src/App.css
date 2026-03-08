@@ -776,6 +776,10 @@
   padding: 0;
 }
 
+.stop-guide-inline {
+  margin-top: 10px;
+}
+
 .stop-guide-summary {
   list-style: none;
   cursor: pointer;
@@ -874,6 +878,13 @@
   margin: 6px 0 0;
   font-size: 13px;
   color: #5d4c55;
+  line-height: 1.55;
+}
+
+.parking-shuttle-subnote {
+  margin: 7px 0 0;
+  font-size: 12px;
+  color: #7b6671;
   line-height: 1.55;
 }
 
@@ -2264,7 +2275,8 @@ input[type='file'] {
 
   .parking-shuttle-lead,
   .parking-shuttle-label,
-  .parking-shuttle-address {
+  .parking-shuttle-address,
+  .parking-shuttle-subnote {
     font-size: 12px;
   }
 

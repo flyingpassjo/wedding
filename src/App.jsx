@@ -66,7 +66,7 @@ const timeline = [
 
 const noticeList = [
   '입장은 오후 5시부터 예식은 오후 6시에 시작합니다.',
-  '셔틀버스는 예식 2시간 전부터 상시 운행됩니다.',
+  '부산역 셔틀버스 이용은 개별 연락으로 안내드립니다.',
 ]
 
 const transportSections = [
@@ -95,7 +95,10 @@ const transportSections = [
   },
   {
     title: '셔틀버스 이용 안내 (예식 2시간 전부터 상시 운행)',
-    items: ['드라이브 오시리아 주차장 입구 → 루모스가든'],
+    items: [
+      '드라이브 오시리아 주차장 입구 → 루모스가든',
+      '부산역 셔틀버스는 이용 예정 하객께 개별 연락드립니다.',
+    ],
   },
 ]
 
@@ -121,6 +124,7 @@ const parkingInfo = {
   shuttleLabel: '드라이브 오시리아 주차장 (셔틀버스 운영)',
   parkingAddress: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
   venueAddress: '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
+  venueParkingNote: '루모스가든 현장 주차도 가능하나 주차 대수가 많지 않아 혼잡할 수 있습니다.',
   contact: '문의 051-722-0727',
 }
 
@@ -1140,39 +1144,42 @@ function App() {
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
+                  {group.title === '공항 리무진' ? (
+                    <details className="stop-guide-card stop-guide-collapse stop-guide-inline">
+                      <summary className="stop-guide-summary">공항리무진1 정류소 안내</summary>
+                      <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
+                      <div className="stop-guide-table-wrap">
+                        <table className="stop-guide-table">
+                          <thead>
+                            <tr>
+                              <th scope="col">해운대/기장 → 김해공항</th>
+                              <th scope="col">김해공항 → 해운대/기장</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {airportLimousineStops.map((stop) => (
+                              <tr key={`${stop.toAirport}-${stop.fromAirport}`}>
+                                <td>{stop.toAirport}</td>
+                                <td>{stop.fromAirport}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="stop-guide-caption">
+                        벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
+                      </p>
+                    </details>
+                  ) : null}
                 </article>
               ))}
             </div>
-            <details className="stop-guide-card stop-guide-collapse">
-              <summary className="stop-guide-summary">공항리무진1 정류소 안내</summary>
-              <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
-              <div className="stop-guide-table-wrap">
-                <table className="stop-guide-table">
-                  <thead>
-                    <tr>
-                      <th scope="col">해운대/기장 → 김해공항</th>
-                      <th scope="col">김해공항 → 해운대/기장</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {airportLimousineStops.map((stop) => (
-                      <tr key={`${stop.toAirport}-${stop.fromAirport}`}>
-                        <td>{stop.toAirport}</td>
-                        <td>{stop.fromAirport}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="stop-guide-caption">
-                벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
-              </p>
-            </details>
             <p className="sub-section-label">주차 및 셔틀 안내</p>
             <article className="parking-shuttle-card">
               <p className="parking-shuttle-lead">오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.</p>
               <p className="parking-shuttle-label">{parkingInfo.shuttleLabel}</p>
               <p className="parking-shuttle-address">{parkingInfo.parkingAddress}</p>
+              <p className="parking-shuttle-subnote">부산역 셔틀버스 이용은 개별 연락으로 안내드립니다.</p>
               <div className="button-row">
                 <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
                   오시리아 주차장 네이버지도
@@ -1184,6 +1191,7 @@ function App() {
             </article>
             <ul className="notice-list">
               <li>{parkingInfo.venueAddress}</li>
+              <li>{parkingInfo.venueParkingNote}</li>
               <li>{parkingInfo.contact}</li>
             </ul>
           </section>

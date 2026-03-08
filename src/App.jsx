@@ -1190,9 +1190,11 @@ function App() {
               </div>
             </article>
             <ul className="notice-list">
-              <li>{parkingInfo.venueAddress}</li>
-              <li>{parkingInfo.venueParkingNote}</li>
-              <li>{parkingInfo.contact}</li>
+              <li className="parking-venue-summary">
+                <p>{parkingInfo.venueAddress}</p>
+                <p>{parkingInfo.venueParkingNote}</p>
+                <p>{parkingInfo.contact}</p>
+              </li>
             </ul>
           </section>
 

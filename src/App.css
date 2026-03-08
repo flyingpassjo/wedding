@@ -892,6 +892,14 @@
   margin-top: 10px;
 }
 
+.parking-venue-summary p {
+  margin: 0;
+}
+
+.parking-venue-summary p + p {
+  margin-top: 4px;
+}
+
 .sub-section-label {
   margin: 14px 0 6px;
   color: #835f71;
@@ -2517,9 +2525,28 @@ input[type='file'] {
 .screen-guest .notice-list li,
 .screen-guest .timeline-list li,
 .screen-guest .transport-group,
+.screen-guest .stop-guide-card,
+.screen-guest .parking-shuttle-card,
 .screen-guest .map-frame {
   border-color: #eae4de;
   background: #fbf9f6;
+}
+
+.screen-guest .stop-guide-summary,
+.screen-guest .stop-guide-title {
+  border-bottom-color: #eae4de;
+  color: #6f5f55;
+  background: transparent;
+}
+
+.screen-guest .stop-guide-table th {
+  background: #f5f1ec;
+  color: #6d5f56;
+}
+
+.screen-guest .stop-guide-caption {
+  background: #f8f4ef;
+  color: #786c63;
 }
 
 .screen-guest .contact-side {

@@ -117,12 +117,12 @@ const airportLimousineStops = [
   { toAirport: '국내선', fromAirport: '반얀트리해운대부산(기차여행)' },
 ]
 
-const parkingGuide = [
-  '드라이브 오시리아 주차장 (셔틀버스 운영)',
-  '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
-  '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
-  '문의 051-722-0727',
-]
+const parkingInfo = {
+  shuttleLabel: '드라이브 오시리아 주차장 (셔틀버스 운영)',
+  parkingAddress: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
+  venueAddress: '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
+  contact: '문의 051-722-0727',
+}
 
 const accounts = [
   { side: '신부 측', bank: '토스', number: '1000-3369-0452', holder: '조영서' },
@@ -1169,19 +1169,23 @@ function App() {
               </p>
             </details>
             <p className="sub-section-label">주차 및 셔틀 안내</p>
+            <article className="parking-shuttle-card">
+              <p className="parking-shuttle-lead">오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.</p>
+              <p className="parking-shuttle-label">{parkingInfo.shuttleLabel}</p>
+              <p className="parking-shuttle-address">{parkingInfo.parkingAddress}</p>
+              <div className="button-row">
+                <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
+                  오시리아 주차장 네이버지도
+                </a>
+                <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
+                  오시리아 주차장 카카오맵
+                </a>
+              </div>
+            </article>
             <ul className="notice-list">
-              {parkingGuide.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
+              <li>{parkingInfo.venueAddress}</li>
+              <li>{parkingInfo.contact}</li>
             </ul>
-            <div className="button-row">
-              <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
-                오시리아 주차장 네이버지도
-              </a>
-              <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
-                오시리아 주차장 카카오맵
-              </a>
-            </div>
           </section>
 
           <section

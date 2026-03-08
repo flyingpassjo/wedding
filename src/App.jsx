@@ -443,7 +443,7 @@ function App() {
     return `${window.location.origin}${withBase('snap.html')}`
   }, [])
   const mapLinks = useMemo(() => {
-    const query = encodeURIComponent(`${wedding.place} ${wedding.address}`)
+    const query = encodeURIComponent(wedding.address)
     return {
       naver: `https://map.naver.com/v5/search/${query}`,
       kakao: `https://map.kakao.com/link/search/${query}`,

@@ -764,6 +764,57 @@
   margin: 8px 0 0;
 }
 
+.stop-guide-card {
+  margin-top: 8px;
+  border: 1px solid #ecd8e1;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.stop-guide-title {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid #efdee5;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7d596b;
+}
+
+.stop-guide-table-wrap {
+  overflow-x: auto;
+}
+
+.stop-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 360px;
+}
+
+.stop-guide-table th,
+.stop-guide-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #f0e4ea;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #5e4b55;
+}
+
+.stop-guide-table th {
+  background: #f6ecf1;
+  color: #6f4d5e;
+  font-weight: 700;
+  text-align: left;
+}
+
+.stop-guide-caption {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #7b6671;
+  background: #fff9fc;
+}
+
 .sub-section-label {
   margin: 14px 0 6px;
   color: #835f71;
@@ -2128,6 +2179,16 @@ input[type='file'] {
   .button-row .btn {
     word-break: keep-all;
     line-break: strict;
+  }
+
+  .stop-guide-title {
+    font-size: 12px;
+  }
+
+  .stop-guide-table th,
+  .stop-guide-table td {
+    padding: 8px 9px;
+    font-size: 12px;
   }
 
   .admin-hero-top {

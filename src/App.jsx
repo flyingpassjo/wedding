@@ -99,6 +99,24 @@ const transportSections = [
   },
 ]
 
+const airportLimousineStops = [
+  { toAirport: '반얀트리해운대부산(기차여행)', fromAirport: '국제선' },
+  { toAirport: '동암후문(아난티코브)', fromAirport: '국내선' },
+  { toAirport: '동부산관광단지(오시리아테마파크)', fromAirport: '더비치푸르지오써밋' },
+  { toAirport: '장산역 14번 출구', fromAirport: '신세계센텀시티' },
+  { toAirport: '해운대온천사거리', fromAirport: '벡스코' },
+  { toAirport: '해운대해수욕장', fromAirport: '요트경기장' },
+  { toAirport: '동백섬 입구', fromAirport: '파크하얏트부산' },
+  { toAirport: '한화리조트해운대', fromAirport: '한화리조트해운대' },
+  { toAirport: '파크하얏트부산', fromAirport: '동백섬 입구' },
+  { toAirport: '요트경기장', fromAirport: '해운대해수욕장' },
+  { toAirport: '벡스코', fromAirport: '해운대온천사거리' },
+  { toAirport: '신세계센텀시티', fromAirport: '장산역 5번 출구' },
+  { toAirport: '상수도남부사업소', fromAirport: '동부산관광단지(한화마티에)' },
+  { toAirport: '국제선', fromAirport: '동암후문(아난티코브)' },
+  { toAirport: '국내선', fromAirport: '반얀트리해운대부산(기차여행)' },
+]
+
 const parkingGuide = [
   '드라이브 오시리아 주차장 (셔틀버스 운영)',
   '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
@@ -1125,6 +1143,31 @@ function App() {
                 </article>
               ))}
             </div>
+            <p className="sub-section-label">공항리무진1 정류소 안내</p>
+            <article className="stop-guide-card">
+              <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
+              <div className="stop-guide-table-wrap">
+                <table className="stop-guide-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">해운대/기장 → 김해공항</th>
+                      <th scope="col">김해공항 → 해운대/기장</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {airportLimousineStops.map((stop) => (
+                      <tr key={`${stop.toAirport}-${stop.fromAirport}`}>
+                        <td>{stop.toAirport}</td>
+                        <td>{stop.fromAirport}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="stop-guide-caption">
+                벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
+              </p>
+            </article>
             <p className="sub-section-label">주차 및 셔틀 안내</p>
             <ul className="notice-list">
               {parkingGuide.map((item) => (

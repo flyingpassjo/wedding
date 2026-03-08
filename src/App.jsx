@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { useScroll } from './hooks/useScroll'
 
+const BASE_PATH = import.meta.env.BASE_URL ?? '/'
+const withBase = (path) => `${BASE_PATH}${String(path || '').replace(/^\/+/, '')}`
+
 const WEB_APP_URL =
   import.meta.env.VITE_GAS_WEB_APP_URL ??
   'https://script.google.com/macros/s/AKfycbw6hwsbS1sQBJ7m0hB6-c2_F9KbzAFJHWHZTE6-T4N2pjXIG8OpByl4YQ_2Vkrddlz-/exec'
@@ -14,8 +17,8 @@ const DRIVE_FOLDER_URL =
   import.meta.env.VITE_PHOTO_UPLOAD_FOLDER_URL ??
   'https://drive.google.com/drive/u/0/folders/1PlTvn5v_1mho2c-tc5IYg7aLiIE9qlU1'
 
-const OPENING_IMAGE = '/images/wedding-start.jepg'
-const MAIN_BANNER_IMAGE = '/images/wedding-sub.jepg'
+const OPENING_IMAGE = withBase('images/wedding-start.jepg')
+const MAIN_BANNER_IMAGE = withBase('images/wedding-sub.jepg')
 const WEDDING_AT = '2026-10-17T18:00:00+09:00'
 const SNAP_UPLOAD_START = '2026-10-17T17:00:00+09:00'
 const SNAP_UPLOAD_START_LABEL = '2026-10-17 17:00부터'
@@ -30,9 +33,9 @@ const WEDDING_CALENDAR = {
 }
 
 const SNAP_COLLAGE_IMAGES = {
-  left: '/images/wedding-main.jpg',
-  center: '/images/wedding-sub.jpg',
-  right: '/images/wedding-sub.jepg',
+  left: withBase('images/wedding-main.jpg'),
+  center: withBase('images/wedding-sub.jpg'),
+  right: withBase('images/wedding-sub.jepg'),
 }
 
 const wedding = {
@@ -436,8 +439,8 @@ function App() {
     [],
   )
   const snapUploadUrl = useMemo(() => {
-    if (typeof window === 'undefined') return '/snap.html'
-    return `${window.location.origin}/snap.html`
+    if (typeof window === 'undefined') return withBase('snap.html')
+    return `${window.location.origin}${withBase('snap.html')}`
   }, [])
   const mapLinks = useMemo(() => {
     const query = encodeURIComponent(`${wedding.place} ${wedding.address}`)
@@ -1070,7 +1073,7 @@ function App() {
             <div className="map-frame">
               {!mapBroken ? (
                 <img
-                  src="/venue-map.png"
+                  src={withBase('venue-map.png')}
                   alt={`${wedding.place} 약도`}
                   className="map-image"
                   onError={() => setMapBroken(true)}

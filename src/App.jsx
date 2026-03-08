@@ -66,7 +66,7 @@ const timeline = [
 
 const noticeList = [
   '입장은 오후 5시부터 예식은 오후 6시에 시작합니다.',
-  '부산역 셔틀버스 이용은 개별 연락으로 안내드립니다.',
+  '부산역 셔틀버스 노선은 김해공항 → 부산역 → 기장 루모스가든이며, 이용은 개별 연락으로 안내드립니다.',
 ]
 
 const transportSections = [
@@ -97,6 +97,7 @@ const transportSections = [
     title: '셔틀버스 이용 안내 (예식 2시간 전부터 상시 운행)',
     items: [
       '드라이브 오시리아 주차장 입구 → 루모스가든',
+      '부산역 셔틀버스 노선: 김해공항 → 부산역 → 기장 루모스가든',
       '부산역 셔틀버스는 이용 예정 하객께 개별 연락드립니다.',
     ],
   },
@@ -1052,7 +1053,7 @@ function App() {
               참석 여부 전달을 꼭 부탁드립니다.
             </p>
             <ul className="notice-list">
-              <li>참석 가능/불가, 동행 인원, 부산역 셔틀 인원을 함께 전달합니다.</li>
+              <li>참석 가능/불가, 동행 인원, 부산역 셔틀(김해공항 → 부산역 → 기장 루모스가든) 인원을 함께 전달합니다.</li>
               {noticeList.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
@@ -1179,7 +1180,9 @@ function App() {
               <p className="parking-shuttle-lead">오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.</p>
               <p className="parking-shuttle-label">{parkingInfo.shuttleLabel}</p>
               <p className="parking-shuttle-address">{parkingInfo.parkingAddress}</p>
-              <p className="parking-shuttle-subnote">부산역 셔틀버스 이용은 개별 연락으로 안내드립니다.</p>
+              <p className="parking-shuttle-subnote">
+                부산역 셔틀버스 노선은 김해공항 → 부산역 → 기장 루모스가든이며, 이용은 개별 연락으로 안내드립니다.
+              </p>
               <div className="button-row">
                 <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
                   오시리아 주차장 네이버지도
@@ -1702,7 +1705,7 @@ function App() {
                       </label>
                     </div>
 
-                    <p className="rsvp-required-label">* 셔틀버스 탑승여부 (부산역 &lt;-&gt; 예식장)</p>
+                    <p className="rsvp-required-label">* 셔틀버스 탑승여부 (김해공항 → 부산역 → 기장 루모스가든)</p>
                     <div className="rsvp-toggle-grid two">
                       <label className={`rsvp-select-card ${rsvp.shuttleChoice === '부산역 셔틀 이용' ? 'selected' : ''}`}>
                         <input

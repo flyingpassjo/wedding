@@ -33,9 +33,8 @@ const WEDDING_CALENDAR = {
 }
 
 const SNAP_COLLAGE_IMAGES = {
-  left: withBase('images/snap-collage-left.jpg'),
-  center: withBase('images/snap-collage-center.jpg'),
-  right: withBase('images/snap-collage-right.jpg'),
+  groom: withBase('images/snap-collage-left.jpg'),
+  bride: withBase('images/snap-collage-right.jpg'),
 }
 
 const wedding = {
@@ -1327,14 +1326,11 @@ function App() {
             style={{ '--reveal-delay': '470ms' }}
           >
             <div className="snap-collage" aria-hidden="true">
-              <div className="snap-photo back-left">
-                <img src={SNAP_COLLAGE_IMAGES.left} alt="" />
+              <div className="snap-photo groom">
+                <img src={SNAP_COLLAGE_IMAGES.groom} alt="" />
               </div>
-              <div className="snap-photo back-right">
-                <img src={SNAP_COLLAGE_IMAGES.center} alt="" />
-              </div>
-              <div className="snap-photo front">
-                <img src={SNAP_COLLAGE_IMAGES.right} alt="" />
+              <div className="snap-photo bride">
+                <img src={SNAP_COLLAGE_IMAGES.bride} alt="" />
               </div>
             </div>
             <InviteSectionTitle kicker="CAPTURE OUR MOMENTS" title="스냅" />

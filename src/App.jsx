@@ -120,13 +120,6 @@ const parkingGuide = [
     address: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
     note: '오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.',
   },
-  {
-    order: 2,
-    title: '루모스 가든',
-    address: '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
-    note: '루모스가든 현장 주차도 가능하나 주차 대수가 많지 않아 혼잡할 수 있습니다.',
-    contact: '문의 051-722-0727',
-  },
 ]
 
 const shuttleGuide = [
@@ -1124,7 +1117,6 @@ function App() {
               참석 여부 전달을 꼭 부탁드립니다.
             </p>
             <ul className="notice-list">
-              <li>참석 가능/불가, 동행 인원, 셔틀 탑승지별 인원(김해공항/부산역)을 함께 전달합니다.</li>
               {noticeList.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
@@ -1263,14 +1255,6 @@ function App() {
                     카카오맵
                   </a>
                 </div>
-              </article>
-              <article className="transport-group">
-                <p className="transport-group-title">{parkingGuide[1].order}. {parkingGuide[1].title}</p>
-                <ul className="transport-list">
-                  <li>{parkingGuide[1].address}</li>
-                  <li>{parkingGuide[1].note}</li>
-                  <li>{parkingGuide[1].contact}</li>
-                </ul>
               </article>
             </div>
             <p className="sub-section-label">셔틀버스 이용안내</p>

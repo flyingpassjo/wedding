@@ -279,6 +279,10 @@ function computeSummary(rows) {
     decline: 0,
     companions: 0,
     shuttle: 0,
+    groomAttendPeople: 0,
+    brideAttendPeople: 0,
+    unknownAttendPeople: 0,
+    attendPeopleTotal: 0,
   }
 
   rows.forEach((row) => {
@@ -295,6 +299,21 @@ function computeSummary(rows) {
 
     summary.companions += companions
     summary.shuttle += shuttle
+
+    if (attendance.includes('참석')) {
+      const attendPeople = companions + 1
+      const rawSide = String(row.side ?? '').trim().toLowerCase()
+
+      summary.attendPeopleTotal += attendPeople
+
+      if (rawSide === 'groom' || rawSide.includes('신랑')) {
+        summary.groomAttendPeople += attendPeople
+      } else if (rawSide === 'bride' || rawSide.includes('신부')) {
+        summary.brideAttendPeople += attendPeople
+      } else {
+        summary.unknownAttendPeople += attendPeople
+      }
+    }
   })
 
   return summary
@@ -1268,6 +1287,21 @@ function App() {
               <article className="admin-metric-card">
                 <p className="admin-metric-label">추가 인원 합계</p>
                 <p className="admin-metric-value">{adminSummary.companions}</p>
+              </article>
+              <article className="admin-metric-card">
+                <p className="admin-metric-label">신랑측 참석인원</p>
+                <p className="admin-metric-value">{adminSummary.groomAttendPeople}</p>
+              </article>
+              <article className="admin-metric-card">
+                <p className="admin-metric-label">신부측 참석인원</p>
+                <p className="admin-metric-value">{adminSummary.brideAttendPeople}</p>
+              </article>
+              <article className="admin-metric-card">
+                <p className="admin-metric-label">총 인원 합계</p>
+                <p className="admin-metric-value">{adminSummary.attendPeopleTotal}</p>
+                {adminSummary.unknownAttendPeople > 0 ? (
+                  <p className="admin-metric-sub">측 구분 미입력 {adminSummary.unknownAttendPeople}명 포함</p>
+                ) : null}
               </article>
               <article className="admin-metric-card">
                 <p className="admin-metric-label">부산역 셔틀 인원</p>

@@ -93,14 +93,6 @@ const transportSections = [
       '김해공항 1층 3번 탑승장 → 공항리무진1(해운대/기장행) → 반얀트리 해운대 하차(종점) 바로 앞',
     ],
   },
-  {
-    title: '셔틀버스 이용 안내 (예식 2시간 전부터 상시 운행)',
-    items: [
-      '드라이브 오시리아 주차장 입구 → 루모스가든',
-      '부산역 셔틀버스 노선: 김해공항 → 부산역 → 기장 루모스가든',
-      '부산역 셔틀버스는 이용 예정 하객께 개별 연락드립니다.',
-    ],
-  },
 ]
 
 const airportLimousineStops = [
@@ -121,13 +113,34 @@ const airportLimousineStops = [
   { toAirport: '국내선', fromAirport: '반얀트리해운대부산(기차여행)' },
 ]
 
-const parkingInfo = {
-  shuttleLabel: '드라이브 오시리아 주차장 (셔틀버스 운영)',
-  parkingAddress: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
-  venueAddress: '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
-  venueParkingNote: '루모스가든 현장 주차도 가능하나 주차 대수가 많지 않아 혼잡할 수 있습니다.',
-  contact: '문의 051-722-0727',
-}
+const parkingGuide = [
+  {
+    order: 1,
+    title: '드라이브 오시리아 주차장 (셔틀버스 운영)',
+    address: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
+    note: '오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.',
+  },
+  {
+    order: 2,
+    title: '루모스 가든',
+    address: '부산광역시 기장군 기장읍 기장해안로 377 (루모스가든)',
+    note: '루모스가든 현장 주차도 가능하나 주차 대수가 많지 않아 혼잡할 수 있습니다.',
+    contact: '문의 051-722-0727',
+  },
+]
+
+const shuttleGuide = [
+  {
+    order: 1,
+    route: '드라이브 오시리아 주차장 입구 → 루모스가든',
+    detail: '예식 2시간 전부터 상시 운행합니다.',
+  },
+  {
+    order: 2,
+    route: '부산역 셔틀버스 노선: 김해공항 → 부산역 → 기장 루모스가든',
+    detail: '부산역 셔틀버스는 이용 예정 하객께 개별 연락드립니다.',
+  },
+]
 
 const accounts = [
   { side: '신부 측', bank: '토스', number: '1000-3369-0452', holder: '조영서' },
@@ -1234,29 +1247,44 @@ function App() {
               ))}
             </div>
             <p className="sub-section-label">주차 및 셔틀 안내</p>
-            <article className="parking-shuttle-card">
-              <p className="parking-shuttle-lead">오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.</p>
-              <p className="parking-shuttle-label">{parkingInfo.shuttleLabel}</p>
-              <p className="parking-shuttle-address">{parkingInfo.parkingAddress}</p>
-              <p className="parking-shuttle-subnote">
-                부산역 셔틀버스 노선은 김해공항 → 부산역 → 기장 루모스가든이며, 이용은 개별 연락으로 안내드립니다.
-              </p>
-              <div className="button-row">
-                <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
-                  오시리아 주차장 네이버지도
-                </a>
-                <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
-                  오시리아 주차장 카카오맵
-                </a>
-              </div>
+            <p className="sub-section-label">주차 안내</p>
+            <div className="parking-guide-grid">
+              <article className="transport-group">
+                <p className="transport-group-title">{parkingGuide[0].order}. {parkingGuide[0].title}</p>
+                <ul className="transport-list">
+                  <li>{parkingGuide[0].address}</li>
+                  <li>{parkingGuide[0].note}</li>
+                </ul>
+                <div className="button-row">
+                  <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
+                    네이버지도
+                  </a>
+                  <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
+                    카카오맵
+                  </a>
+                </div>
+              </article>
+              <article className="transport-group">
+                <p className="transport-group-title">{parkingGuide[1].order}. {parkingGuide[1].title}</p>
+                <ul className="transport-list">
+                  <li>{parkingGuide[1].address}</li>
+                  <li>{parkingGuide[1].note}</li>
+                  <li>{parkingGuide[1].contact}</li>
+                </ul>
+              </article>
+            </div>
+            <p className="sub-section-label">셔틀버스 이용안내</p>
+            <article className="transport-group">
+              <ul className="transport-list">
+                {shuttleGuide.map((item) => (
+                  <li key={item.order}>
+                    <strong>{item.order}. {item.route}</strong>
+                    <br />
+                    {item.detail}
+                  </li>
+                ))}
+              </ul>
             </article>
-            <ul className="notice-list">
-              <li className="parking-venue-summary">
-                <p>{parkingInfo.venueAddress}</p>
-                <p>{parkingInfo.venueParkingNote}</p>
-                <p>{parkingInfo.contact}</p>
-              </li>
-            </ul>
           </section>
 
           <section

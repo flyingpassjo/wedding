@@ -852,52 +852,18 @@
   background: #fff9fc;
 }
 
-.parking-shuttle-card {
+.parking-guide-grid {
   margin-top: 8px;
-  border: 1px solid #ecd8e1;
-  border-radius: 8px;
-  background: #fff;
-  padding: 10px 12px 12px;
+  display: grid;
+  gap: 8px;
 }
 
-.parking-shuttle-lead {
-  margin: 0;
-  font-size: 13px;
-  color: #6f5462;
-  line-height: 1.6;
-}
-
-.parking-shuttle-label {
-  margin: 8px 0 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: #7d596b;
-}
-
-.parking-shuttle-address {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #5d4c55;
-  line-height: 1.55;
-}
-
-.parking-shuttle-subnote {
-  margin: 7px 0 0;
-  font-size: 12px;
-  color: #7b6671;
-  line-height: 1.55;
-}
-
-.parking-shuttle-card .button-row {
+.parking-guide-grid .button-row {
   margin-top: 10px;
 }
 
-.parking-venue-summary p {
-  margin: 0;
-}
-
-.parking-venue-summary p + p {
-  margin-top: 4px;
+.transport-list strong {
+  font-weight: 700;
 }
 
 .sub-section-label {
@@ -2281,10 +2247,8 @@ input[type='file'] {
     font-size: 12px;
   }
 
-  .parking-shuttle-lead,
-  .parking-shuttle-label,
-  .parking-shuttle-address,
-  .parking-shuttle-subnote {
+  .transport-list,
+  .transport-group-title {
     font-size: 12px;
   }
 
@@ -2526,7 +2490,6 @@ input[type='file'] {
 .screen-guest .timeline-list li,
 .screen-guest .transport-group,
 .screen-guest .stop-guide-card,
-.screen-guest .parking-shuttle-card,
 .screen-guest .map-frame {
   border-color: #eae4de;
   background: #fbf9f6;

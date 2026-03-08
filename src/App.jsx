@@ -140,6 +140,8 @@ const RSVP_INITIAL = {
   name: '',
   phone: '',
   companions: '0',
+  airportShuttleCount: '0',
+  busanStationShuttleCount: '0',
   shuttleCount: '0',
   meal: '식사 가능',
   shuttleChoice: '미이용',
@@ -295,6 +297,10 @@ function formatPhoneInput(raw) {
   return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
 }
 
+function parseCount(value) {
+  return Number(String(value ?? '0').replace(/[^0-9]/g, '') || 0)
+}
+
 function computeSummary(rows) {
   const summary = {
     total: 0,
@@ -302,6 +308,8 @@ function computeSummary(rows) {
     decline: 0,
     companions: 0,
     shuttle: 0,
+    airportShuttle: 0,
+    busanStationShuttle: 0,
     groomAttendPeople: 0,
     brideAttendPeople: 0,
     unknownAttendPeople: 0,
@@ -317,11 +325,17 @@ function computeSummary(rows) {
     if (attendance.includes('참석')) summary.attend += 1
     if (attendance.includes('불참')) summary.decline += 1
 
-    const companions = Number(String(row.companions ?? row.guests ?? '0').replace(/[^0-9]/g, '') || 0)
-    const shuttle = Number(String(row.shuttleCount ?? row.shuttle ?? '0').replace(/[^0-9]/g, '') || 0)
+    const companions = parseCount(row.companions ?? row.guests ?? '0')
+    const airportShuttle = parseCount(row.airportShuttleCount ?? row.shuttleAirportCount)
+    const busanStationShuttle = parseCount(row.busanStationShuttleCount ?? row.shuttleBusanCount)
+    const derivedShuttle = airportShuttle + busanStationShuttle
+    const shuttleRaw = parseCount(row.shuttleCount ?? row.shuttle ?? '0')
+    const shuttle = shuttleRaw > 0 ? shuttleRaw : derivedShuttle
 
     summary.companions += companions
     summary.shuttle += shuttle
+    summary.airportShuttle += airportShuttle
+    summary.busanStationShuttle += busanStationShuttle
 
     if (attendance.includes('참석')) {
       const attendPeople = companions + 1
@@ -667,11 +681,32 @@ function App() {
 
     setRsvp((prev) => {
       if (key === 'shuttleChoice') {
-        if (value === '부산역 셔틀 이용' && Number(prev.shuttleCount || 0) === 0) {
-          return { ...prev, shuttleChoice: value, shuttleCount: '1' }
+        const currentAirport = parseCount(prev.airportShuttleCount)
+        const currentBusan = parseCount(prev.busanStationShuttleCount)
+        if (value === '부산역 셔틀 이용' && currentAirport + currentBusan === 0) {
+          return {
+            ...prev,
+            shuttleChoice: value,
+            airportShuttleCount: '0',
+            busanStationShuttleCount: '1',
+            shuttleCount: '1',
+          }
+        }
+        if (value === '부산역 셔틀 이용') {
+          return {
+            ...prev,
+            shuttleChoice: value,
+            shuttleCount: String(currentAirport + currentBusan),
+          }
         }
         if (value === '미이용') {
-          return { ...prev, shuttleChoice: value, shuttleCount: '0' }
+          return {
+            ...prev,
+            shuttleChoice: value,
+            airportShuttleCount: '0',
+            busanStationShuttleCount: '0',
+            shuttleCount: '0',
+          }
         }
       }
 
@@ -684,6 +719,8 @@ function App() {
           ...prev,
           attendance: value,
           companions: '0',
+          airportShuttleCount: '0',
+          busanStationShuttleCount: '0',
           shuttleCount: '0',
           meal: '식사 불가 · 답례품 수령',
           shuttleChoice: '미이용',
@@ -733,8 +770,21 @@ function App() {
 
   const adjustRsvpCount = (key, diff) => {
     setRsvp((prev) => {
-      const current = Number(prev[key] || 0)
+      const current = parseCount(prev[key])
       const next = Math.max(0, Math.min(20, current + diff))
+
+      if (key === 'airportShuttleCount' || key === 'busanStationShuttleCount') {
+        const airport = key === 'airportShuttleCount' ? next : parseCount(prev.airportShuttleCount)
+        const busan = key === 'busanStationShuttleCount' ? next : parseCount(prev.busanStationShuttleCount)
+        const shuttleTotal = airport + busan
+        return {
+          ...prev,
+          [key]: String(next),
+          shuttleCount: String(shuttleTotal),
+          shuttleChoice: shuttleTotal > 0 ? '부산역 셔틀 이용' : '미이용',
+        }
+      }
+
       return { ...prev, [key]: String(next) }
     })
   }
@@ -760,6 +810,12 @@ function App() {
     setIsRsvpSubmitting(true)
 
     try {
+      const airportShuttleCount =
+        isAttending && rsvp.shuttleChoice === '부산역 셔틀 이용' ? rsvp.airportShuttleCount : '0'
+      const busanStationShuttleCount =
+        isAttending && rsvp.shuttleChoice === '부산역 셔틀 이용' ? rsvp.busanStationShuttleCount : '0'
+      const shuttleCount = String(parseCount(airportShuttleCount) + parseCount(busanStationShuttleCount))
+
       const payload = {
         type: 'RSVP',
         timestamp: new Date().toISOString(),
@@ -767,7 +823,9 @@ function App() {
         name: rsvp.name.trim(),
         phone: rsvp.phone.trim(),
         companions: isAttending ? rsvp.companions : '0',
-        shuttleCount: isAttending ? rsvp.shuttleCount : '0',
+        airportShuttleCount,
+        busanStationShuttleCount,
+        shuttleCount,
         side: rsvp.side,
         meal: isAttending ? rsvp.meal : '식사 불가 · 답례품 수령',
         shuttleChoice: isAttending ? rsvp.shuttleChoice : '미이용',
@@ -1053,7 +1111,7 @@ function App() {
               참석 여부 전달을 꼭 부탁드립니다.
             </p>
             <ul className="notice-list">
-              <li>참석 가능/불가, 동행 인원, 부산역 셔틀(김해공항 → 부산역 → 기장 루모스가든) 인원을 함께 전달합니다.</li>
+              <li>참석 가능/불가, 동행 인원, 셔틀 탑승지별 인원(김해공항/부산역)을 함께 전달합니다.</li>
               {noticeList.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
@@ -1364,9 +1422,17 @@ function App() {
                 ) : null}
               </article>
               <article className="admin-metric-card">
-                <p className="admin-metric-label">부산역 셔틀 인원</p>
+                <p className="admin-metric-label">셔틀 전체 인원</p>
                 <p className="admin-metric-value">{adminSummary.shuttle}</p>
                 <p className="admin-metric-sub">참석자 기준 {adminShuttleRate}%</p>
+              </article>
+              <article className="admin-metric-card">
+                <p className="admin-metric-label">김해공항 탑승 인원</p>
+                <p className="admin-metric-value">{adminSummary.airportShuttle}</p>
+              </article>
+              <article className="admin-metric-card">
+                <p className="admin-metric-label">부산역 탑승 인원</p>
+                <p className="admin-metric-value">{adminSummary.busanStationShuttle}</p>
               </article>
             </div>
           </section>
@@ -1409,7 +1475,9 @@ function App() {
                       <th>구분</th>
                       <th>참석</th>
                       <th>추가</th>
-                      <th>셔틀</th>
+                      <th>셔틀합</th>
+                      <th>공항</th>
+                      <th>부산역</th>
                       <th>연락처</th>
                     </tr>
                   </thead>
@@ -1418,6 +1486,10 @@ function App() {
                       const attendance = row.attendance ?? row.status ?? '-'
                       const attendanceClass = String(attendance).includes('불참') ? 'is-decline' : 'is-attend'
                       const rowTime = row.timestamp ?? row.createdAt ?? row.updatedAt ?? ''
+                      const airportCount = parseCount(row.airportShuttleCount ?? row.shuttleAirportCount)
+                      const busanCount = parseCount(row.busanStationShuttleCount ?? row.shuttleBusanCount)
+                      const shuttleTotalRaw = parseCount(row.shuttleCount ?? row.shuttle)
+                      const shuttleTotal = shuttleTotalRaw > 0 ? shuttleTotalRaw : airportCount + busanCount
 
                       return (
                         <tr key={`${row.name ?? row.phone ?? ''}-${idx}`}>
@@ -1428,7 +1500,9 @@ function App() {
                             <span className={`admin-chip ${attendanceClass}`}>{attendance}</span>
                           </td>
                           <td>{row.companions ?? row.guests ?? '0'}</td>
-                          <td>{row.shuttleCount ?? row.shuttle ?? '0'}</td>
+                          <td>{shuttleTotal}</td>
+                          <td>{airportCount}</td>
+                          <td>{busanCount}</td>
                           <td>{row.phone ?? '-'}</td>
                         </tr>
                       )
@@ -1732,18 +1806,33 @@ function App() {
                     </div>
 
                     {rsvp.shuttleChoice === '부산역 셔틀 이용' ? (
-                      <div className="rsvp-stepper-block">
-                        <p className="rsvp-required-label">* 부산역 셔틀 인원</p>
-                        <div className="rsvp-stepper">
-                          <button type="button" onClick={() => adjustRsvpCount('shuttleCount', -1)}>
-                            －
-                          </button>
-                          <strong>{rsvp.shuttleCount}</strong>
-                          <button type="button" onClick={() => adjustRsvpCount('shuttleCount', 1)}>
-                            ＋
-                          </button>
+                      <>
+                        <div className="rsvp-stepper-block">
+                          <p className="rsvp-required-label">* 김해공항 탑승 인원</p>
+                          <div className="rsvp-stepper">
+                            <button type="button" onClick={() => adjustRsvpCount('airportShuttleCount', -1)}>
+                              －
+                            </button>
+                            <strong>{rsvp.airportShuttleCount}</strong>
+                            <button type="button" onClick={() => adjustRsvpCount('airportShuttleCount', 1)}>
+                              ＋
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                        <div className="rsvp-stepper-block">
+                          <p className="rsvp-required-label">* 부산역 탑승 인원</p>
+                          <div className="rsvp-stepper">
+                            <button type="button" onClick={() => adjustRsvpCount('busanStationShuttleCount', -1)}>
+                              －
+                            </button>
+                            <strong>{rsvp.busanStationShuttleCount}</strong>
+                            <button type="button" onClick={() => adjustRsvpCount('busanStationShuttleCount', 1)}>
+                              ＋
+                            </button>
+                          </div>
+                        </div>
+                        <p className="rsvp-state-note">셔틀 탑승 인원 합계 {rsvp.shuttleCount}명</p>
+                      </>
                     ) : null}
                   </>
                 ) : (

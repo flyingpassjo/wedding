@@ -2139,7 +2139,7 @@ input[type='file'] {
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 860px;
 }
 
 .admin-table th,

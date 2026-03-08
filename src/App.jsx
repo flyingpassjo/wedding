@@ -443,7 +443,7 @@ function App() {
     return `${window.location.origin}${withBase('snap.html')}`
   }, [])
   const mapLinks = useMemo(() => {
-    const query = encodeURIComponent(wedding.address)
+    const query = encodeURIComponent('부산광역시 기장군 기장읍 기장해안로 377')
     return {
       naver: `https://map.naver.com/v5/search/${query}`,
       kakao: `https://map.kakao.com/link/search/${query}`,

@@ -2115,6 +2115,7 @@ input[type='file'] {
     top: max(5px, env(safe-area-inset-top));
   }
 
+  .button-row,
   .button-row.three,
   .invite-contact-grid,
   .inline-two,
@@ -2122,6 +2123,11 @@ input[type='file'] {
   .admin-metric-grid,
   .admin-metric-grid.visit-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .button-row .btn {
+    word-break: keep-all;
+    line-break: strict;
   }
 
   .admin-hero-top {

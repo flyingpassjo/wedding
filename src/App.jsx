@@ -33,9 +33,9 @@ const WEDDING_CALENDAR = {
 }
 
 const SNAP_COLLAGE_IMAGES = {
-  left: withBase('images/wedding-main.jpg'),
-  center: withBase('images/wedding-sub.jpg'),
-  right: withBase('images/wedding-sub.jepg'),
+  left: withBase('images/snap-collage-left.jpg'),
+  center: withBase('images/snap-collage-center.jpg'),
+  right: withBase('images/snap-collage-right.jpg'),
 }
 
 const wedding = {

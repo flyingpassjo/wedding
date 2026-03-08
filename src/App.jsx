@@ -1143,8 +1143,8 @@ function App() {
                 </article>
               ))}
             </div>
-            <p className="sub-section-label">공항리무진1 정류소 안내</p>
-            <article className="stop-guide-card">
+            <details className="stop-guide-card stop-guide-collapse">
+              <summary className="stop-guide-summary">공항리무진1 정류소 안내</summary>
               <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
               <div className="stop-guide-table-wrap">
                 <table className="stop-guide-table">
@@ -1167,7 +1167,7 @@ function App() {
               <p className="stop-guide-caption">
                 벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
               </p>
-            </article>
+            </details>
             <p className="sub-section-label">주차 및 셔틀 안내</p>
             <ul className="notice-list">
               {parkingGuide.map((item) => (

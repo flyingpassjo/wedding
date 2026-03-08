@@ -1242,7 +1242,7 @@ function App() {
             <p className="sub-section-label">주차 안내</p>
             <div className="parking-guide-grid">
               <article className="transport-group">
-                <p className="transport-group-title">{parkingGuide[0].order}. {parkingGuide[0].title}</p>
+                <p className="transport-group-title">{parkingGuide[0].title}</p>
                 <ul className="transport-list">
                   <li>{parkingGuide[0].address}</li>
                   <li>{parkingGuide[0].note}</li>

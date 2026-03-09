@@ -363,8 +363,12 @@
       const SHEET_URL =
         'https://docs.google.com/spreadsheets/d/1zPbH8RcBarPho4miI6BY5wBOpiBb3r6CF77wwvl0ii0/edit'
 
-      const ACTIVATION_AT = new Date('2026-10-17T17:00:00+09:00')
-      const ACTIVATION_LABEL = '2026-10-17 17:00'
+      const query = new URLSearchParams(window.location.search)
+      const IS_TEST_MODE = query.get('test') === '1'
+      const ACTIVATION_AT = IS_TEST_MODE
+        ? new Date('2000-01-01T00:00:00+09:00')
+        : new Date('2026-10-17T17:00:00+09:00')
+      const ACTIVATION_LABEL = IS_TEST_MODE ? '테스트 모드' : '2026-10-17 17:00'
       const MAX_FILES = 40
       const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -446,7 +450,9 @@
 
       function refreshActivationState() {
         if (isUploadOpen()) {
-          activationNote.textContent = '현재 업로드가 가능합니다.'
+          activationNote.textContent = IS_TEST_MODE
+            ? '테스트 모드: 현재 업로드가 가능합니다.'
+            : '현재 업로드가 가능합니다.'
           nameInput.disabled = false
           pickBtn.disabled = false
           submitBtn.disabled = false

@@ -891,6 +891,7 @@ function App() {
   }
 
   const scrollToCategory = (id) => {
+    setActiveCategory(id)
     setJumpHighlightId(id)
 
     const target = sectionRefs[id]?.current
@@ -918,6 +919,11 @@ function App() {
       const top = node.getBoundingClientRect().top - offset
       if (top <= 0) next = item.id
     })
+
+    const isNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4
+    if (isNearBottom) {
+      next = GUEST_CATEGORY_ITEMS[GUEST_CATEGORY_ITEMS.length - 1].id
+    }
 
     setActiveCategory((prev) => (prev === next ? prev : next))
   }, [isGuestScreen, scroll.y, sectionRefs])
@@ -1181,7 +1187,7 @@ function App() {
                 <div className="map-fallback">`public/venue-map.png` 파일을 추가하면 약도가 표시됩니다.</div>
               )}
             </div>
-            <div className="button-row three">
+            <div className="button-row three location-map-row">
               <a className="btn btn-line" href={mapLinks.naver} target="_blank" rel="noreferrer">
                 네이버지도
               </a>

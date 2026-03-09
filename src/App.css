@@ -679,6 +679,10 @@
   grid-template-columns: 1fr;
 }
 
+.location-map-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .notice-list {
   margin: 14px 0 0;
   padding: 0;
@@ -2307,6 +2311,17 @@ input[type='file'] {
   .button-row .btn {
     word-break: keep-all;
     line-break: strict;
+  }
+
+  .location-map-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .location-map-row .btn {
+    min-height: 34px;
+    padding: 0 6px;
+    font-size: 12px;
   }
 
   .stop-guide-title {

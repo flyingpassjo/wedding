@@ -16,12 +16,13 @@ const GOOGLE_SHEET_URL =
 const DRIVE_FOLDER_URL =
   import.meta.env.VITE_PHOTO_UPLOAD_FOLDER_URL ??
   'https://drive.google.com/drive/u/0/folders/1PlTvn5v_1mho2c-tc5IYg7aLiIE9qlU1'
+const OPEN_CHAT_URL =
+  import.meta.env.VITE_OPEN_CHAT_URL ??
+  'https://open.kakao.com/o/s4kn2uki'
 
 const OPENING_IMAGE = withBase('images/wedding-start.jepg')
 const MAIN_BANNER_IMAGE = withBase('images/wedding-sub.jepg')
 const WEDDING_AT = '2026-10-17T18:00:00+09:00'
-const SNAP_UPLOAD_START = '2026-10-17T17:00:00+09:00'
-const SNAP_UPLOAD_START_LABEL = '2026-10-17 17:00부터'
 const RSVP_HIDE_UNTIL_KEY = 'wedding_rsvp_hide_until'
 const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토']
 const WEDDING_CALENDAR = {
@@ -499,10 +500,7 @@ function App() {
     ],
     [],
   )
-  const snapUploadUrl = useMemo(() => {
-    if (typeof window === 'undefined') return withBase('snap.html')
-    return `${window.location.origin}${withBase('snap.html')}`
-  }, [])
+  const snapUploadUrl = OPEN_CHAT_URL
   const mapLinks = useMemo(() => {
     const query = encodeURIComponent('부산광역시 기장군 기장읍 기장해안로 377')
     return {
@@ -517,9 +515,6 @@ function App() {
       naver: `https://map.naver.com/v5/search/${query}`,
       kakao: `https://map.kakao.com/link/search/${query}`,
     }
-  }, [])
-  const isWeddingSnapOpen = useMemo(() => {
-    return Date.now() >= new Date(SNAP_UPLOAD_START).getTime()
   }, [])
   const weddingCalendarCells = useMemo(
     () => buildCalendarCells(WEDDING_CALENDAR.year, WEDDING_CALENDAR.month),
@@ -1336,14 +1331,15 @@ function App() {
             <InviteSectionTitle kicker="CAPTURE OUR MOMENTS" title="스냅" />
             <div className="snap-intro">
               <p>신랑신부의 행복한 순간을 담아주세요.</p>
-              <p>예식 당일, 아래 버튼을 통해 사진을 올려주세요.</p>
+              <p>아래 버튼을 눌러 카카오 오픈채팅방으로</p>
+              <p>사진과 영상을 자유롭게 보내주세요.</p>
               <p>많은 참여 부탁드려요!</p>
             </div>
-            <a className="btn snap-upload-btn" href={snapUploadUrl}>
-              스냅 사진 업로드
+            <a className="btn snap-upload-btn" href={snapUploadUrl} target="_blank" rel="noreferrer">
+              카카오 오픈채팅으로 보내기
             </a>
             <p className="snap-open-note">
-              {isWeddingSnapOpen ? '지금 업로드 가능합니다.' : `${SNAP_UPLOAD_START_LABEL}\n업로드 가능합니다.`}
+              오픈채팅방은 언제든 접속 가능합니다.
             </p>
           </section>
 
@@ -1383,10 +1379,10 @@ function App() {
                 사진 폴더 열기
               </a>
               <a className="btn btn-line" href={snapUploadUrl} target="_blank" rel="noreferrer">
-                업로드 페이지 열기
+                오픈채팅 열기
               </a>
-              <button type="button" className="btn btn-line" onClick={() => onCopy(snapUploadUrl, '업로드 링크')}>
-                업로드 링크 복사
+              <button type="button" className="btn btn-line" onClick={() => onCopy(snapUploadUrl, '오픈채팅 링크')}>
+                오픈채팅 링크 복사
               </button>
             </div>
             {adminError ? <p className="error-text">{adminError}</p> : null}

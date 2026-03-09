@@ -1196,12 +1196,12 @@ function App() {
             <details className="transport-group transport-collapse transport-master-collapse" open>
               <summary className="transport-summary">전체 안내 보기</summary>
               <div className="transport-collapse-body transport-master-body">
-                <details className="transport-group transport-collapse transport-section-collapse" open>
+                <details className="transport-group transport-collapse transport-section-collapse">
                   <summary className="transport-summary">교통 안내</summary>
                   <div className="transport-collapse-body">
                     <div className="transport-groups transport-inner-groups">
                       {transportSections.map((group) => (
-                        <details key={group.title} className="transport-group transport-collapse">
+                        <details key={group.title} className="transport-group transport-collapse transport-item-collapse">
                           <summary className="transport-summary">{group.title}</summary>
                           <div className="transport-collapse-body">
                             <ul className="transport-list">
@@ -1243,7 +1243,7 @@ function App() {
                   </div>
                 </details>
 
-                <details className="transport-group transport-collapse transport-section-collapse" open>
+                <details className="transport-group transport-collapse transport-section-collapse">
                   <summary className="transport-summary">주차 안내</summary>
                   <div className="transport-collapse-body">
                     <div className="parking-guide-grid">
@@ -1266,7 +1266,7 @@ function App() {
                   </div>
                 </details>
 
-                <details className="transport-group transport-collapse transport-section-collapse" open>
+                <details className="transport-group transport-collapse transport-section-collapse">
                   <summary className="transport-summary">셔틀버스 이용안내</summary>
                   <div className="transport-collapse-body">
                     <article className="transport-group transport-inner-card">

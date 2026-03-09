@@ -764,6 +764,48 @@
   margin: 8px 0 0;
 }
 
+.transport-collapse {
+  padding: 0;
+  overflow: hidden;
+}
+
+.transport-summary {
+  list-style: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 11px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #7d596b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transport-summary::-webkit-details-marker {
+  display: none;
+}
+
+.transport-summary::after {
+  content: '펼치기';
+  font-size: 12px;
+  font-weight: 600;
+  color: #936d7f;
+}
+
+.transport-collapse[open] .transport-summary::after {
+  content: '접기';
+}
+
+.transport-collapse-body {
+  border-top: 1px solid #efdee5;
+  padding: 0 12px 10px;
+}
+
+.transport-collapse-body .transport-list {
+  margin: 10px 0 0;
+}
+
 .stop-guide-card {
   margin-top: 8px;
   border: 1px solid #ecd8e1;

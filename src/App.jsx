@@ -1279,7 +1279,7 @@ function App() {
                       <ul className="transport-list">
                         {shuttleGuide.map((item) => (
                           <li key={item.order}>
-                            <strong>{item.order}. {item.route}</strong>
+                            <strong>{item.route}</strong>
                             <br />
                             {item.detail}
                           </li>

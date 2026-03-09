@@ -1192,90 +1192,98 @@ function App() {
                 구글지도
               </a>
             </div>
-            <p className="sub-section-label">교통 안내</p>
-            <div className="transport-groups">
-              {transportSections.map((group) => (
-                ['대중교통', '자가용'].includes(group.title) ? (
-                  <details key={group.title} className="transport-group transport-collapse">
-                    <summary className="transport-summary">{group.title}</summary>
-                    <div className="transport-collapse-body">
+            <p className="sub-section-label">교통 · 주차 · 셔틀 안내</p>
+            <details className="transport-group transport-collapse transport-master-collapse" open>
+              <summary className="transport-summary">전체 안내 보기</summary>
+              <div className="transport-collapse-body transport-master-body">
+                <details className="transport-group transport-collapse transport-section-collapse" open>
+                  <summary className="transport-summary">교통 안내</summary>
+                  <div className="transport-collapse-body">
+                    <div className="transport-groups transport-inner-groups">
+                      {transportSections.map((group) => (
+                        <details key={group.title} className="transport-group transport-collapse">
+                          <summary className="transport-summary">{group.title}</summary>
+                          <div className="transport-collapse-body">
+                            <ul className="transport-list">
+                              {group.items.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                            {group.title === '공항 리무진' ? (
+                              <details className="stop-guide-card stop-guide-collapse stop-guide-inline">
+                                <summary className="stop-guide-summary">공항리무진1 정류소 안내</summary>
+                                <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
+                                <div className="stop-guide-table-wrap">
+                                  <table className="stop-guide-table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">해운대/기장 → 김해공항</th>
+                                        <th scope="col">김해공항 → 해운대/기장</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {airportLimousineStops.map((stop) => (
+                                        <tr key={`${stop.toAirport}-${stop.fromAirport}`}>
+                                          <td>{stop.toAirport}</td>
+                                          <td>{stop.fromAirport}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <p className="stop-guide-caption">
+                                  벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
+                                </p>
+                              </details>
+                            ) : null}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </div>
+                </details>
+
+                <details className="transport-group transport-collapse transport-section-collapse" open>
+                  <summary className="transport-summary">주차 안내</summary>
+                  <div className="transport-collapse-body">
+                    <div className="parking-guide-grid">
+                      <article className="transport-group transport-inner-card">
+                        <p className="transport-group-title">{parkingGuide[0].title}</p>
+                        <ul className="transport-list">
+                          <li>{parkingGuide[0].address}</li>
+                          <li>{parkingGuide[0].note}</li>
+                        </ul>
+                        <div className="button-row">
+                          <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
+                            네이버지도
+                          </a>
+                          <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
+                            카카오맵
+                          </a>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                </details>
+
+                <details className="transport-group transport-collapse transport-section-collapse" open>
+                  <summary className="transport-summary">셔틀버스 이용안내</summary>
+                  <div className="transport-collapse-body">
+                    <article className="transport-group transport-inner-card">
                       <ul className="transport-list">
-                        {group.items.map((item) => (
-                          <li key={item}>{item}</li>
+                        {shuttleGuide.map((item) => (
+                          <li key={item.order}>
+                            <strong>{item.order}. {item.route}</strong>
+                            <br />
+                            {item.detail}
+                          </li>
                         ))}
                       </ul>
-                    </div>
-                  </details>
-                ) : (
-                  <article key={group.title} className="transport-group">
-                    <p className="transport-group-title">{group.title}</p>
-                    <ul className="transport-list">
-                      {group.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                    {group.title === '공항 리무진' ? (
-                      <details className="stop-guide-card stop-guide-collapse stop-guide-inline">
-                        <summary className="stop-guide-summary">공항리무진1 정류소 안내</summary>
-                        <p className="stop-guide-title">김해공항 ↔ 해운대/기장</p>
-                        <div className="stop-guide-table-wrap">
-                          <table className="stop-guide-table">
-                            <thead>
-                              <tr>
-                                <th scope="col">해운대/기장 → 김해공항</th>
-                                <th scope="col">김해공항 → 해운대/기장</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {airportLimousineStops.map((stop) => (
-                                <tr key={`${stop.toAirport}-${stop.fromAirport}`}>
-                                  <td>{stop.toAirport}</td>
-                                  <td>{stop.fromAirport}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                        <p className="stop-guide-caption">
-                          벡스코, 신세계센텀시티, 해운대해수욕장 등 주요 정류소를 경유합니다.
-                        </p>
-                      </details>
-                    ) : null}
-                  </article>
-                )
-              ))}
-            </div>
-            <p className="sub-section-label">주차 및 셔틀 안내</p>
-            <p className="sub-section-label">주차 안내</p>
-            <div className="parking-guide-grid">
-              <article className="transport-group">
-                <p className="transport-group-title">{parkingGuide[0].title}</p>
-                <ul className="transport-list">
-                  <li>{parkingGuide[0].address}</li>
-                  <li>{parkingGuide[0].note}</li>
-                </ul>
-                <div className="button-row">
-                  <a className="btn btn-line" href={parkingMapLinks.naver} target="_blank" rel="noreferrer">
-                    네이버지도
-                  </a>
-                  <a className="btn btn-line" href={parkingMapLinks.kakao} target="_blank" rel="noreferrer">
-                    카카오맵
-                  </a>
-                </div>
-              </article>
-            </div>
-            <p className="sub-section-label">셔틀버스 이용안내</p>
-            <article className="transport-group">
-              <ul className="transport-list">
-                {shuttleGuide.map((item) => (
-                  <li key={item.order}>
-                    <strong>{item.order}. {item.route}</strong>
-                    <br />
-                    {item.detail}
-                  </li>
-                ))}
-              </ul>
-            </article>
+                    </article>
+                  </div>
+                </details>
+              </div>
+            </details>
           </section>
 
           <section

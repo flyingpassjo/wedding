@@ -806,6 +806,28 @@
   margin: 10px 0 0;
 }
 
+.transport-master-collapse {
+  margin-top: 8px;
+}
+
+.transport-master-body {
+  display: grid;
+  gap: 10px;
+  padding: 10px 12px 12px;
+}
+
+.transport-section-collapse {
+  margin: 0;
+}
+
+.transport-inner-groups {
+  margin-top: 0;
+}
+
+.transport-inner-card {
+  margin: 0;
+}
+
 .stop-guide-card {
   margin-top: 8px;
   border: 1px solid #ecd8e1;

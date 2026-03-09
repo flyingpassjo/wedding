@@ -679,7 +679,7 @@
   grid-template-columns: 1fr;
 }
 
-.location-map-row {
+.button-row.three.location-map-row {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -2313,15 +2313,16 @@ input[type='file'] {
     line-break: strict;
   }
 
-  .location-map-row {
+  .button-row.three.location-map-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
   }
 
-  .location-map-row .btn {
+  .button-row.three.location-map-row .btn {
     min-height: 34px;
     padding: 0 6px;
-    font-size: 12px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .stop-guide-title {

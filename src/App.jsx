@@ -23,7 +23,6 @@ const OPEN_CHAT_URL =
 const OPENING_IMAGE = withBase('images/wedding-start.jepg')
 const MAIN_BANNER_IMAGE = withBase('images/wedding-sub.jepg')
 const WEDDING_AT = '2026-10-17T18:00:00+09:00'
-const RSVP_HIDE_UNTIL_KEY = 'wedding_rsvp_hide_until'
 const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토']
 const WEDDING_CALENDAR = {
   year: 2026,
@@ -66,7 +65,7 @@ const timeline = [
 
 const noticeList = [
   '입장은 오후 5시부터 예식은 오후 6시에 시작합니다.',
-  '부산역 셔틀버스 노선은 김해공항 → 부산역 → 기장 루모스가든이며, 이용은 개별 연락으로 안내드립니다.',
+  '식사는 바베큐와 뷔페가 준비되어 있습니다.\n와인 및 주류 준비되어 있으니 파티처럼 즐겨주세요.\n(식사는 여섯시부터 이용가능합니다.)',
 ]
 
 const transportSections = [
@@ -158,8 +157,7 @@ const RSVP_INITIAL = {
 const GUEST_CATEGORY_ITEMS = [
   { id: 'rsvp', label: '회신', mobileLabel: '회신' },
   { id: 'contact', label: '연락/계좌', mobileLabel: '연락/계좌' },
-  { id: 'ceremony', label: '예식', mobileLabel: '예식' },
-  { id: 'location', label: '오시는길', mobileLabel: '오시는길' },
+  { id: 'info', label: '안내', mobileLabel: '안내' },
   { id: 'snap', label: '이벤트', mobileLabel: '이벤트' },
 ]
 
@@ -422,7 +420,6 @@ function App() {
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(false)
-  const [rsvpView, setRsvpView] = useState('intro')
 
   const [rsvp, setRsvp] = useState(RSVP_INITIAL)
 
@@ -452,16 +449,14 @@ function App() {
   const categoryBarRef = useRef(null)
   const rsvpSectionRef = useRef(null)
   const contactSectionRef = useRef(null)
-  const ceremonySectionRef = useRef(null)
-  const locationSectionRef = useRef(null)
+  const infoSectionRef = useRef(null)
   const snapSectionRef = useRef(null)
 
   const sectionRefs = useMemo(
     () => ({
       rsvp: rsvpSectionRef,
       contact: contactSectionRef,
-      ceremony: ceremonySectionRef,
-      location: locationSectionRef,
+      info: infoSectionRef,
       snap: snapSectionRef,
     }),
     [],
@@ -576,7 +571,6 @@ function App() {
       if (event.key === 'Escape') {
         setIsRsvpModalOpen(false)
         setIsContactModalOpen(false)
-        setRsvpView('intro')
       }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -601,15 +595,8 @@ function App() {
   useEffect(() => {
     if (screen !== 'guest' || showOpening || hasAutoOpenedRsvp || isRsvpModalOpen || isContactModalOpen) return undefined
 
-    const hideUntil = Number(localStorage.getItem(RSVP_HIDE_UNTIL_KEY) ?? 0)
-    if (hideUntil > Date.now()) {
-      setHasAutoOpenedRsvp(true)
-      return undefined
-    }
-
     const timer = setTimeout(() => {
       setIsRsvpModalOpen(true)
-      setRsvpView('intro')
       setHasAutoOpenedRsvp(true)
     }, 220)
 
@@ -710,15 +697,13 @@ function App() {
     }
   }
 
-  const openRsvpModal = (view = 'form') => {
+  const openRsvpModal = () => {
     setIsContactModalOpen(false)
     setIsRsvpModalOpen(true)
-    setRsvpView(view)
   }
 
   const closeRsvpModal = () => {
     setIsRsvpModalOpen(false)
-    setRsvpView('intro')
   }
 
   const openContactModal = () => {
@@ -728,13 +713,6 @@ function App() {
 
   const closeContactModal = () => {
     setIsContactModalOpen(false)
-  }
-
-  const hideRsvpForToday = () => {
-    const until = new Date()
-    until.setHours(23, 59, 59, 999)
-    localStorage.setItem(RSVP_HIDE_UNTIL_KEY, String(until.getTime()))
-    closeRsvpModal()
   }
 
   const adjustRsvpCount = (key, diff) => {
@@ -959,7 +937,7 @@ function App() {
           ) : null}
 
           <main className="page-container guest-page">
-          <section className="invite-cover reveal-item" style={{ '--reveal-delay': '0ms' }}>
+          <section className="invite-cover" style={{ '--reveal-delay': '0ms' }}>
             {!coverImageBroken ? (
               <img
                 src={MAIN_BANNER_IMAGE}
@@ -998,62 +976,8 @@ function App() {
             </div>
           </section>
 
-          <section className="card invite-card calendar-count-card reveal-item" style={{ '--reveal-delay': '70ms' }}>
-            <div className="calendar-count-head">
-              <p>{WEDDING_CALENDAR.dateStamp}</p>
-              <span>{WEDDING_CALENDAR.timeStamp}</span>
-            </div>
-
-            <div className="wedding-calendar-grid">
-              {WEEKDAY_LABELS.map((label, idx) => (
-                <div key={label} className={`weekday ${idx === 0 ? 'sun' : idx === 6 ? 'sat' : ''}`}>
-                  {label}
-                </div>
-              ))}
-
-              {weddingCalendarCells.map((day, idx) => {
-                if (!day) {
-                  return <div key={`empty-${idx}`} className="day-cell empty" />
-                }
-
-                const isSunday = idx % 7 === 0
-                const isWeddingDay = day === WEDDING_CALENDAR.day
-                return (
-                  <div key={`day-${day}`} className={`day-cell ${isSunday ? 'sun' : ''} ${isWeddingDay ? 'target' : ''}`}>
-                    <span>{day}</span>
-                  </div>
-                )
-              })}
-            </div>
-
-            <div className="countdown-panel">
-              <div>
-                <span>DAYS</span>
-                <strong>{countdown.days}</strong>
-              </div>
-              <i>:</i>
-              <div>
-                <span>HOUR</span>
-                <strong>{String(countdown.hours).padStart(2, '0')}</strong>
-              </div>
-              <i>:</i>
-              <div>
-                <span>MIN</span>
-                <strong>{String(countdown.minutes).padStart(2, '0')}</strong>
-              </div>
-              <i>:</i>
-              <div>
-                <span>SEC</span>
-                <strong>{String(countdown.seconds).padStart(2, '0')}</strong>
-              </div>
-            </div>
-            <p className="countdown-note">
-              {wedding.groom}, {wedding.bride}의 결혼식이 <strong>{countdown.days}일</strong> 남았습니다.
-            </p>
-          </section>
-
           <section
-            className={`card invite-card reveal-item ${activeCategory === 'rsvp' || jumpHighlightId === 'rsvp' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'rsvp' ? 'section-click-ring' : ''}`}
+            className={`card invite-card ${activeCategory === 'rsvp' || jumpHighlightId === 'rsvp' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'rsvp' ? 'section-click-ring' : ''}`}
             ref={rsvpSectionRef}
             style={{ '--reveal-delay': '140ms' }}
           >
@@ -1068,23 +992,25 @@ function App() {
               하단의 버튼을 클릭하여
               <br />
               참석 여부 전달을 꼭 부탁드립니다.
+              <br />
+              (지정좌석으로 운영 될 예정이니, 필히 부탁드리겠습니다.)
             </p>
             <ul className="notice-list">
               {noticeList.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
             </ul>
-            <button type="button" className="btn btn-primary rsvp-open-btn" onClick={() => openRsvpModal('form')}>
+            <button type="button" className="btn btn-primary rsvp-open-btn" onClick={openRsvpModal}>
               간단히 회신하기
             </button>
           </section>
 
           <section
-            className={`card invite-card reveal-item ${activeCategory === 'ceremony' || jumpHighlightId === 'ceremony' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'ceremony' ? 'section-click-ring' : ''}`}
-            ref={ceremonySectionRef}
+            className={`card invite-card ${activeCategory === 'info' || jumpHighlightId === 'info' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'info' ? 'section-click-ring' : ''}`}
+            ref={infoSectionRef}
             style={{ '--reveal-delay': '280ms' }}
           >
-            <InviteSectionTitle kicker="INFORMATION" title="예식 정보 · 예식 순서" />
+            <InviteSectionTitle kicker="INFORMATION" title="예식 정보 · 오시는 길" />
             <dl className="essential-list">
               <div>
                 <dt>일시</dt>
@@ -1098,19 +1024,7 @@ function App() {
                 <dt>주소</dt>
                 <dd>{wedding.address}</dd>
               </div>
-              <div>
-                <dt>문의</dt>
-                <dd>{wedding.phoneDisplay}</dd>
-              </div>
             </dl>
-            <div className="button-row">
-              <a className="btn btn-line" href={`tel:${wedding.phoneLink}`}>
-                예식장 전화
-              </a>
-              <a className="btn btn-line" href={mapLinks.naver} target="_blank" rel="noreferrer">
-                네이버지도
-              </a>
-            </div>
             <p className="sub-section-label">예식 순서</p>
             <ul className="timeline-list">
               {timeline.map((item) => (
@@ -1120,14 +1034,7 @@ function App() {
                 </li>
               ))}
             </ul>
-          </section>
-
-          <section
-            className={`card invite-card reveal-item ${activeCategory === 'location' || jumpHighlightId === 'location' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'location' ? 'section-click-ring' : ''}`}
-            ref={locationSectionRef}
-            style={{ '--reveal-delay': '350ms' }}
-          >
-            <InviteSectionTitle kicker="LOCATION" title="오시는 길 · 주차 및 셔틀 안내" />
+            <p className="sub-section-label">오시는 길 · 주차 및 셔틀 안내</p>
             <div className="map-frame">
               {!mapBroken ? (
                 <img
@@ -1246,7 +1153,7 @@ function App() {
           </section>
 
           <section
-            className={`card invite-card reveal-item ${activeCategory === 'contact' || jumpHighlightId === 'contact' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'contact' ? 'section-click-ring' : ''}`}
+            className={`card invite-card ${activeCategory === 'contact' || jumpHighlightId === 'contact' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'contact' ? 'section-click-ring' : ''}`}
             ref={contactSectionRef}
             style={{ '--reveal-delay': '400ms' }}
           >
@@ -1296,7 +1203,7 @@ function App() {
           </section>
 
           <section
-            className={`card invite-card reveal-item ${activeCategory === 'snap' || jumpHighlightId === 'snap' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'snap' ? 'section-click-ring' : ''}`}
+            className={`card invite-card ${activeCategory === 'snap' || jumpHighlightId === 'snap' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'snap' ? 'section-click-ring' : ''}`}
             ref={snapSectionRef}
             style={{ '--reveal-delay': '470ms' }}
           >
@@ -1593,133 +1500,95 @@ function App() {
 
       {isGuestScreen && isRsvpModalOpen ? (
         <div className="rsvp-modal-backdrop" onClick={closeRsvpModal} role="dialog" aria-modal="true">
-          {rsvpView === 'intro' ? (
-            <section className="rsvp-intro-modal" onClick={(event) => event.stopPropagation()}>
-              <div className="rsvp-intro-hero">
-                <img src={OPENING_IMAGE} alt="참석 의사 전달 안내" />
-                <div className="rsvp-intro-hero-dim" />
-                <p className="rsvp-intro-date-mark">
-                  26
-                  <br />
-                  10
-                  <br />
-                  17
-                </p>
-              </div>
-
-              <div className="rsvp-intro-content">
-                <button type="button" className="rsvp-close-x" onClick={closeRsvpModal} aria-label="닫기">
-                  ×
-                </button>
-                <h4>참석 의사 전달</h4>
-                <p className="rsvp-intro-text">
-                  식장은 지정 좌석으로 준비하고 있습니다.
-                  참석 여부를 꼭 전달해주세요.
-                </p>
-
-                <ul className="rsvp-intro-meta">
-                  <li>
-                    <span aria-hidden="true">📅</span>
-                    {wedding.dateLabel} {wedding.timeLabel}
-                  </li>
-                  <li>
-                    <span aria-hidden="true">🏛️</span>
-                    {wedding.place}
-                  </li>
-                  <li>
-                    <span aria-hidden="true">📍</span>
-                    {wedding.address}
-                  </li>
-                </ul>
-
-                <div className="rsvp-intro-actions">
-                  <button type="button" className="rsvp-hide-today" onClick={hideRsvpForToday}>
-                    오늘 하루 보지 않기
+          <section className="rsvp-form-modal rsvp-form-modal-direct" onClick={(event) => event.stopPropagation()}>
+            <div className="rsvp-form-hero">
+              <img src={OPENING_IMAGE} alt="참석 의사 전달 안내" />
+              <div className="rsvp-intro-hero-dim" />
+              <p className="rsvp-intro-date-mark">
+                26
+                <br />
+                10
+                <br />
+                17
+              </p>
+              <div className="rsvp-form-overlay">
+                <header className="rsvp-form-head rsvp-form-head-overlay">
+                  <h4>참석 의사 전달</h4>
+                  <button type="button" className="rsvp-close-x" onClick={closeRsvpModal} aria-label="닫기">
+                    ×
                   </button>
-                  <button type="button" className="rsvp-intro-submit" onClick={() => setRsvpView('form')}>
-                    간단히 회신하기
-                  </button>
-                </div>
-              </div>
-            </section>
-          ) : (
-            <section className="rsvp-form-modal" onClick={(event) => event.stopPropagation()}>
-              <header className="rsvp-form-head">
-                <h4>참석 의사 전달</h4>
-                <button type="button" className="rsvp-close-x" onClick={closeRsvpModal} aria-label="닫기">
-                  ×
-                </button>
-              </header>
+                </header>
 
-              <p className="rsvp-form-desc">이름과 참석 인원만 간단히 남겨주시면 됩니다.</p>
-
-              <form className="rsvp-modern-form" onSubmit={submitRsvp}>
-                <div className="rsvp-toggle-grid two">
-                  <label className={`rsvp-select-card ${rsvp.attendance === '참석' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="attendance"
-                      value="참석"
-                      checked={rsvp.attendance === '참석'}
-                      onChange={onRsvpFieldChange('attendance')}
-                    />
-                    <span className="card-title">가능</span>
-                    <span className="card-check">{rsvp.attendance === '참석' ? '●' : '○'}</span>
-                  </label>
-                  <label className={`rsvp-select-card ${rsvp.attendance === '불참' ? 'selected' : ''}`}>
-                    <input
-                      type="radio"
-                      name="attendance"
-                      value="불참"
-                      checked={rsvp.attendance === '불참'}
-                      onChange={onRsvpFieldChange('attendance')}
-                    />
-                    <span className="card-title">불가</span>
-                    <span className="card-check">{rsvp.attendance === '불참' ? '●' : '○'}</span>
-                  </label>
+                <div className="rsvp-form-note rsvp-form-note-overlay">
+                  <p>식장은 지정 좌석으로 준비하고 있습니다.</p>
+                  <strong>참석 여부를 꼭 전달해주세요.</strong>
                 </div>
 
-                <div className="rsvp-line-field">
-                  <label className="rsvp-field-label">이름</label>
+                <p className="rsvp-form-desc rsvp-form-desc-overlay">이름과 참석 인원만 간단히 남겨주시면 됩니다.</p>
+              </div>
+            </div>
+
+            <form className="rsvp-modern-form" onSubmit={submitRsvp}>
+              <div className="rsvp-line-field">
+                <label className="rsvp-field-label">이름</label>
+                <input
+                  type="text"
+                  value={rsvp.name}
+                  onChange={onRsvpFieldChange('name')}
+                  placeholder="이름을 입력해 주세요."
+                />
+              </div>
+
+              <div className="rsvp-toggle-grid two">
+                <label className={`rsvp-select-card ${rsvp.attendance === '참석' ? 'selected' : ''}`}>
                   <input
-                    type="text"
-                    value={rsvp.name}
-                    onChange={onRsvpFieldChange('name')}
-                    placeholder="이름을 입력해 주세요."
+                    type="radio"
+                    name="attendance"
+                    value="참석"
+                    checked={rsvp.attendance === '참석'}
+                    onChange={onRsvpFieldChange('attendance')}
                   />
-                </div>
+                  <span className="card-title">참석 가능</span>
+                  <span className="card-check">{rsvp.attendance === '참석' ? '●' : '○'}</span>
+                </label>
+                <label className={`rsvp-select-card ${rsvp.attendance === '불참' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="attendance"
+                    value="불참"
+                    checked={rsvp.attendance === '불참'}
+                    onChange={onRsvpFieldChange('attendance')}
+                  />
+                  <span className="card-title">참석 불가</span>
+                  <span className="card-check">{rsvp.attendance === '불참' ? '●' : '○'}</span>
+                </label>
+              </div>
 
-                {isAttending ? (
-                  <>
-                    <div className="rsvp-stepper-block">
-                      <p className="rsvp-required-label">인원</p>
-                      <div className="rsvp-stepper">
-                        <button type="button" onClick={() => adjustRsvpCount('companions', -1)}>
-                          －
-                        </button>
-                        <strong>{attendingHeadCount}</strong>
-                        <button type="button" onClick={() => adjustRsvpCount('companions', 1)}>
-                          ＋
-                        </button>
-                      </div>
-                      <p className="rsvp-state-note">본인 포함 총 참석 인원을 선택해 주세요.</p>
-                    </div>
-                  </>
-                ) : (
-                  <p className="rsvp-state-note">불참으로 간단히 접수됩니다.</p>
-                )}
-
-                <div className="rsvp-modal-actions modern">
-                  <button type="button" className="btn btn-line" onClick={() => setRsvpView('intro')}>
-                    이전
-                  </button>
-                  <button className="btn btn-primary" type="submit" disabled={isRsvpSubmitting}>
-                    {isRsvpSubmitting ? '전달 중...' : '회신 완료하기'}
-                  </button>
+              {isAttending ? (
+                <div className="rsvp-stepper-block">
+                  <p className="rsvp-required-label">인원</p>
+                  <div className="rsvp-stepper">
+                    <button type="button" onClick={() => adjustRsvpCount('companions', -1)}>
+                      －
+                    </button>
+                    <strong>{attendingHeadCount}</strong>
+                    <button type="button" onClick={() => adjustRsvpCount('companions', 1)}>
+                      ＋
+                    </button>
+                  </div>
+                  <p className="rsvp-state-note">본인 포함 총 참석 인원을 선택해 주세요.</p>
                 </div>
-              </form>
-            </section>
-          )}
+              ) : (
+                <p className="rsvp-state-note">불참으로 간단히 접수됩니다.</p>
+              )}
+
+              <div className="rsvp-modal-actions modern">
+                <button className="btn btn-primary" type="submit" disabled={isRsvpSubmitting}>
+                  {isRsvpSubmitting ? '전달 중...' : '회신 완료하기'}
+                </button>
+              </div>
+            </form>
+          </section>
         </div>
       ) : null}
 

@@ -142,7 +142,7 @@ const accounts = [
 
 const RSVP_INITIAL = {
   attendance: '참석',
-  side: 'bride',
+  side: '',
   name: '',
   phone: '',
   companions: '0',
@@ -535,6 +535,7 @@ function App() {
   )
   const isGuestScreen = screen === 'guest'
   const isAttending = rsvp.attendance === '참석'
+  const attendingHeadCount = parseCount(rsvp.companions) + 1
   const coverParallaxY = isGuestScreen ? Math.min(scroll.y * 0.11, 56) : 0
   const showScrollTop = isGuestScreen && scroll.y > 280
   const progressScale = isGuestScreen ? scroll.progressY : 0
@@ -675,41 +676,7 @@ function App() {
   const onRsvpFieldChange = (key) => (event) => {
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
 
-    if (key === 'phone') {
-      value = formatPhoneInput(value)
-    }
-
     setRsvp((prev) => {
-      if (key === 'shuttleChoice') {
-        const currentAirport = parseCount(prev.airportShuttleCount)
-        const currentBusan = parseCount(prev.busanStationShuttleCount)
-        if (value === '부산역 셔틀 이용' && currentAirport + currentBusan === 0) {
-          return {
-            ...prev,
-            shuttleChoice: value,
-            airportShuttleCount: '0',
-            busanStationShuttleCount: '1',
-            shuttleCount: '1',
-          }
-        }
-        if (value === '부산역 셔틀 이용') {
-          return {
-            ...prev,
-            shuttleChoice: value,
-            shuttleCount: String(currentAirport + currentBusan),
-          }
-        }
-        if (value === '미이용') {
-          return {
-            ...prev,
-            shuttleChoice: value,
-            airportShuttleCount: '0',
-            busanStationShuttleCount: '0',
-            shuttleCount: '0',
-          }
-        }
-      }
-
       if (key !== 'attendance') {
         return { ...prev, [key]: value }
       }
@@ -719,6 +686,8 @@ function App() {
           ...prev,
           attendance: value,
           companions: '0',
+          side: '',
+          phone: '',
           airportShuttleCount: '0',
           busanStationShuttleCount: '0',
           shuttleCount: '0',
@@ -797,39 +766,23 @@ function App() {
       return
     }
 
-    if (!rsvp.phone.trim()) {
-      setToast('연락처를 입력해 주세요.')
-      return
-    }
-
-    if (!rsvp.agreePrivacy) {
-      setToast('개인정보 수집 및 이용 동의가 필요합니다.')
-      return
-    }
-
     setIsRsvpSubmitting(true)
 
     try {
-      const airportShuttleCount =
-        isAttending && rsvp.shuttleChoice === '부산역 셔틀 이용' ? rsvp.airportShuttleCount : '0'
-      const busanStationShuttleCount =
-        isAttending && rsvp.shuttleChoice === '부산역 셔틀 이용' ? rsvp.busanStationShuttleCount : '0'
-      const shuttleCount = String(parseCount(airportShuttleCount) + parseCount(busanStationShuttleCount))
-
       const payload = {
         type: 'RSVP',
         timestamp: new Date().toISOString(),
         attendance: rsvp.attendance,
         name: rsvp.name.trim(),
-        phone: rsvp.phone.trim(),
+        phone: '',
         companions: isAttending ? rsvp.companions : '0',
-        airportShuttleCount,
-        busanStationShuttleCount,
-        shuttleCount,
-        side: rsvp.side,
-        meal: isAttending ? rsvp.meal : '식사 불가 · 답례품 수령',
-        shuttleChoice: isAttending ? rsvp.shuttleChoice : '미이용',
-        memo: rsvp.memo.trim(),
+        airportShuttleCount: '0',
+        busanStationShuttleCount: '0',
+        shuttleCount: '0',
+        side: '',
+        meal: '',
+        shuttleChoice: '미이용',
+        memo: '',
         sheetUrl: GOOGLE_SHEET_URL,
       }
 
@@ -1122,7 +1075,7 @@ function App() {
               ))}
             </ul>
             <button type="button" className="btn btn-primary rsvp-open-btn" onClick={() => openRsvpModal('form')}>
-              참석 여부 전달하기
+              간단히 회신하기
             </button>
           </section>
 
@@ -1505,7 +1458,7 @@ function App() {
                       <th>성함</th>
                       <th>구분</th>
                       <th>참석</th>
-                      <th>추가</th>
+                      <th>인원</th>
                       <th>셔틀합</th>
                       <th>공항</th>
                       <th>부산역</th>
@@ -1517,6 +1470,8 @@ function App() {
                       const attendance = row.attendance ?? row.status ?? '-'
                       const attendanceClass = String(attendance).includes('불참') ? 'is-decline' : 'is-attend'
                       const rowTime = row.timestamp ?? row.createdAt ?? row.updatedAt ?? ''
+                      const companionCount = parseCount(row.companions ?? row.guests ?? '0')
+                      const totalPeople = String(attendance).includes('참석') ? companionCount + 1 : 0
                       const airportCount = parseCount(row.airportShuttleCount ?? row.shuttleAirportCount)
                       const busanCount = parseCount(row.busanStationShuttleCount ?? row.shuttleBusanCount)
                       const shuttleTotalRaw = parseCount(row.shuttleCount ?? row.shuttle)
@@ -1530,7 +1485,7 @@ function App() {
                           <td>
                             <span className={`admin-chip ${attendanceClass}`}>{attendance}</span>
                           </td>
-                          <td>{row.companions ?? row.guests ?? '0'}</td>
+                          <td>{totalPeople}</td>
                           <td>{shuttleTotal}</td>
                           <td>{airportCount}</td>
                           <td>{busanCount}</td>
@@ -1658,8 +1613,8 @@ function App() {
                 </button>
                 <h4>참석 의사 전달</h4>
                 <p className="rsvp-intro-text">
-                  특별한 날 축하의 마음으로 참석해주시는 모든 분들을 한 분 한 분 더욱 귀하게 모실 수 있도록,
-                  아래 버튼으로 신랑 &amp; 신부에게 꼭 참석여부 전달을 부탁드립니다.
+                  식장은 지정 좌석으로 준비하고 있습니다.
+                  참석 여부를 꼭 전달해주세요.
                 </p>
 
                 <ul className="rsvp-intro-meta">
@@ -1682,7 +1637,7 @@ function App() {
                     오늘 하루 보지 않기
                   </button>
                   <button type="button" className="rsvp-intro-submit" onClick={() => setRsvpView('form')}>
-                    참석의사 전달하기
+                    간단히 회신하기
                   </button>
                 </div>
               </div>
@@ -1696,7 +1651,7 @@ function App() {
                 </button>
               </header>
 
-              <p className="rsvp-form-desc">원활한 예식 진행을 위해 참석 정보를 미리 알려주시면 감사하겠습니다.</p>
+              <p className="rsvp-form-desc">이름과 참석 인원만 간단히 남겨주시면 됩니다.</p>
 
               <form className="rsvp-modern-form" onSubmit={submitRsvp}>
                 <div className="rsvp-toggle-grid two">
@@ -1725,180 +1680,41 @@ function App() {
                 </div>
 
                 <div className="rsvp-line-field">
-                  <div className="rsvp-name-side">
-                    <label className="rsvp-field-label">성함</label>
-                    <div className={`rsvp-side-segment ${rsvp.side === 'groom' ? 'is-groom' : 'is-bride'}`}>
-                      <span className="segment-thumb" aria-hidden="true" />
-                      <label className={`segment-option ${rsvp.side === 'groom' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="side"
-                          value="groom"
-                          checked={rsvp.side === 'groom'}
-                          onChange={onRsvpFieldChange('side')}
-                        />
-                        신랑측
-                      </label>
-                      <label className={`segment-option ${rsvp.side === 'bride' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="side"
-                          value="bride"
-                          checked={rsvp.side === 'bride'}
-                          onChange={onRsvpFieldChange('side')}
-                        />
-                        신부측
-                      </label>
-                    </div>
-                  </div>
+                  <label className="rsvp-field-label">이름</label>
                   <input
                     type="text"
                     value={rsvp.name}
                     onChange={onRsvpFieldChange('name')}
-                    placeholder="성함을 입력해 주세요."
-                  />
-                </div>
-
-                <div className="rsvp-line-field">
-                  <label className="rsvp-field-label">연락처</label>
-                  <input
-                    type="tel"
-                    value={rsvp.phone}
-                    onChange={onRsvpFieldChange('phone')}
-                    placeholder="참석자 대표 연락처를 입력해 주세요."
+                    placeholder="이름을 입력해 주세요."
                   />
                 </div>
 
                 {isAttending ? (
                   <>
                     <div className="rsvp-stepper-block">
-                      <p className="rsvp-required-label">* 추가인원</p>
+                      <p className="rsvp-required-label">인원</p>
                       <div className="rsvp-stepper">
                         <button type="button" onClick={() => adjustRsvpCount('companions', -1)}>
                           －
                         </button>
-                        <strong>{rsvp.companions}</strong>
+                        <strong>{attendingHeadCount}</strong>
                         <button type="button" onClick={() => adjustRsvpCount('companions', 1)}>
                           ＋
                         </button>
                       </div>
+                      <p className="rsvp-state-note">본인 포함 총 참석 인원을 선택해 주세요.</p>
                     </div>
-
-                    <p className="rsvp-required-label">* 식사여부</p>
-                    <div className="rsvp-toggle-grid two">
-                      <label className={`rsvp-select-card ${rsvp.meal === '식사 가능' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="meal"
-                          value="식사 가능"
-                          checked={rsvp.meal === '식사 가능'}
-                          onChange={onRsvpFieldChange('meal')}
-                        />
-                        <span className="card-title">식사함</span>
-                        <span className="card-check">{rsvp.meal === '식사 가능' ? '●' : '○'}</span>
-                      </label>
-                      <label className={`rsvp-select-card ${rsvp.meal === '식사 불가 · 답례품 수령' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="meal"
-                          value="식사 불가 · 답례품 수령"
-                          checked={rsvp.meal === '식사 불가 · 답례품 수령'}
-                          onChange={onRsvpFieldChange('meal')}
-                        />
-                        <span className="card-title">식사안함</span>
-                        <span className="card-check">{rsvp.meal === '식사 불가 · 답례품 수령' ? '●' : '○'}</span>
-                      </label>
-                    </div>
-
-                    <p className="rsvp-required-label">* 셔틀버스 탑승여부 (김해공항 → 부산역 → 기장 루모스가든)</p>
-                    <div className="rsvp-toggle-grid two">
-                      <label className={`rsvp-select-card ${rsvp.shuttleChoice === '부산역 셔틀 이용' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="shuttleChoice"
-                          value="부산역 셔틀 이용"
-                          checked={rsvp.shuttleChoice === '부산역 셔틀 이용'}
-                          onChange={onRsvpFieldChange('shuttleChoice')}
-                        />
-                        <span className="card-title">탑승함</span>
-                        <span className="card-check">{rsvp.shuttleChoice === '부산역 셔틀 이용' ? '●' : '○'}</span>
-                      </label>
-                      <label className={`rsvp-select-card ${rsvp.shuttleChoice === '미이용' ? 'selected' : ''}`}>
-                        <input
-                          type="radio"
-                          name="shuttleChoice"
-                          value="미이용"
-                          checked={rsvp.shuttleChoice === '미이용'}
-                          onChange={onRsvpFieldChange('shuttleChoice')}
-                        />
-                        <span className="card-title">탑승안함</span>
-                        <span className="card-check">{rsvp.shuttleChoice === '미이용' ? '●' : '○'}</span>
-                      </label>
-                    </div>
-
-                    {rsvp.shuttleChoice === '부산역 셔틀 이용' ? (
-                      <>
-                        <div className="rsvp-stepper-block">
-                          <p className="rsvp-required-label">* 김해공항 탑승 인원</p>
-                          <div className="rsvp-stepper">
-                            <button type="button" onClick={() => adjustRsvpCount('airportShuttleCount', -1)}>
-                              －
-                            </button>
-                            <strong>{rsvp.airportShuttleCount}</strong>
-                            <button type="button" onClick={() => adjustRsvpCount('airportShuttleCount', 1)}>
-                              ＋
-                            </button>
-                          </div>
-                        </div>
-                        <div className="rsvp-stepper-block">
-                          <p className="rsvp-required-label">* 부산역 탑승 인원</p>
-                          <div className="rsvp-stepper">
-                            <button type="button" onClick={() => adjustRsvpCount('busanStationShuttleCount', -1)}>
-                              －
-                            </button>
-                            <strong>{rsvp.busanStationShuttleCount}</strong>
-                            <button type="button" onClick={() => adjustRsvpCount('busanStationShuttleCount', 1)}>
-                              ＋
-                            </button>
-                          </div>
-                        </div>
-                        <p className="rsvp-state-note">셔틀 탑승 인원 합계 {rsvp.shuttleCount}명</p>
-                      </>
-                    ) : null}
                   </>
                 ) : (
-                  <p className="rsvp-state-note">불참으로 접수되며 식사 및 셔틀은 미이용 처리됩니다.</p>
+                  <p className="rsvp-state-note">불참으로 간단히 접수됩니다.</p>
                 )}
-
-                <div className="rsvp-line-field">
-                  <label className="rsvp-field-label">전달사항</label>
-                  <input
-                    type="text"
-                    value={rsvp.memo}
-                    onChange={onRsvpFieldChange('memo')}
-                    maxLength={30}
-                    placeholder="전달하실 내용을 입력해 주세요. (예: 유아 1명 동반)"
-                  />
-                </div>
-
-                <label className="rsvp-privacy-card">
-                  <input type="checkbox" checked={rsvp.agreePrivacy} onChange={onRsvpFieldChange('agreePrivacy')} />
-                  <div>
-                    <strong>동의합니다.</strong>
-                    <p>
-                      참석여부 전달을 위한 개인정보 수집 및 이용에 동의해주세요.
-                      <br />
-                      항목: 성함, 연락처 / 보유기간: 청첩장 이용 종료 시 까지
-                    </p>
-                  </div>
-                </label>
 
                 <div className="rsvp-modal-actions modern">
                   <button type="button" className="btn btn-line" onClick={() => setRsvpView('intro')}>
                     이전
                   </button>
                   <button className="btn btn-primary" type="submit" disabled={isRsvpSubmitting}>
-                    {isRsvpSubmitting ? '전달 중...' : '참석의사 전달하기'}
+                    {isRsvpSubmitting ? '전달 중...' : '회신 완료하기'}
                   </button>
                 </div>
               </form>

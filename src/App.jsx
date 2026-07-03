@@ -1501,6 +1501,10 @@ function App() {
       {isGuestScreen && isRsvpModalOpen ? (
         <div className="rsvp-modal-backdrop" onClick={closeRsvpModal} role="dialog" aria-modal="true">
           <section className="rsvp-form-modal rsvp-form-modal-direct" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="rsvp-close-x rsvp-close-sticky" onClick={closeRsvpModal} aria-label="닫기">
+              ×
+            </button>
+
             <div className="rsvp-form-hero">
               <img src={OPENING_IMAGE} alt="참석 의사 전달 안내" />
               <div className="rsvp-intro-hero-dim" />
@@ -1514,9 +1518,6 @@ function App() {
               <div className="rsvp-form-overlay">
                 <header className="rsvp-form-head rsvp-form-head-overlay">
                   <h4>참석 의사 전달</h4>
-                  <button type="button" className="rsvp-close-x" onClick={closeRsvpModal} aria-label="닫기">
-                    ×
-                  </button>
                 </header>
 
                 <div className="rsvp-form-note rsvp-form-note-overlay">

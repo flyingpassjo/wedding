@@ -57,15 +57,21 @@ const wedding = {
 }
 
 const timeline = [
-  { time: '17:00', title: '입장 가능' },
-  { time: '18:00', title: '예식 시작' },
-  { time: '18:00 ~ 19:00', title: '1부 예식' },
-  { time: '19:00 ~ 21:00', title: '2부 예식' },
+  { time: '17:00', title: '입장' },
+  { time: '18:00', title: '1부 예식 시작' },
+  {
+    time: '19:00',
+    title: '2부 파티',
+    desc: '(신랑·신부의 친구 및 가까운 지인들과 함께하는 파티)',
+  },
+  { time: '21:00', title: '행사 종료' },
 ]
 
 const noticeList = [
-  '입장은 오후 5시부터 예식은 오후 6시에 시작합니다.',
-  '식사는 바베큐와 뷔페가 준비되어 있습니다.\n와인 및 주류 준비되어 있으니 파티처럼 즐겨주세요.\n(식사는 여섯시부터 이용가능합니다.)',
+  '오후 5시부터 입장이 가능하며, 예식은 오후 6시에 시작됩니다.',
+  '바비큐와 뷔페가 준비되어 있으며, 식사는 오후 6시부터 이용 가능합니다.',
+  '와인과 다양한 주류도 준비되어 있으니 파티처럼 함께 즐겨주세요.',
+  '원하시는 술이 있으시면 자유롭게 가져오세요. (콜키지 프리)',
 ]
 
 const transportSections = [
@@ -983,17 +989,11 @@ function App() {
           >
             <InviteSectionTitle kicker="RESPONSE" title="참석 여부 회신 · 안내 말씀" />
             <p className="rsvp-highlight">
-              특별한 날 축하하는 마음으로
+              <strong>지정 좌석제</strong>로 진행되어 참석 여부 회신을 부탁드립니다.
               <br />
-              참석해 주시는 모든 분들에게 한 분 한 분
+              하단 버튼으로 회신해 주시면 좌석 준비에 큰 도움이 됩니다.
               <br />
-              마음을 담아 귀하게 모실 수 있도록,
-              <br />
-              하단의 버튼을 클릭하여
-              <br />
-              참석 여부 전달을 꼭 부탁드립니다.
-              <br />
-              (지정좌석으로 운영 될 예정이니, 필히 부탁드리겠습니다.)
+              변경이 생기면 언제든 편하게 말씀해 주세요.
             </p>
             <ul className="notice-list">
               {noticeList.map((item, idx) => (
@@ -1030,7 +1030,10 @@ function App() {
               {timeline.map((item) => (
                 <li key={item.time}>
                   <span>{item.time}</span>
-                  <strong>{item.title}</strong>
+                  <div className="timeline-copy">
+                    <strong>{item.title}</strong>
+                    {item.desc ? <p>{item.desc}</p> : null}
+                  </div>
                 </li>
               ))}
             </ul>

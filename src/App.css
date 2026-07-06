@@ -716,6 +716,14 @@
   color: #684152;
 }
 
+.rsvp-subnote {
+  margin: 10px 0 0;
+  text-align: center;
+  color: #8b717d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .map-frame {
   margin-top: 14px;
   border-radius: 4px;

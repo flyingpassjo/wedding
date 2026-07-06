@@ -57,7 +57,7 @@ const wedding = {
 }
 
 const timeline = [
-  { time: '17:00', title: '입장' },
+  { time: '17:00', title: '입장 · 웰컴드링크' },
   { time: '18:00', title: '1부 예식' },
   {
     time: '19:00',
@@ -90,6 +90,8 @@ const transportSections = [
       '[일반도로1] 송정터널 → 부산국제외국인학교 → 연화터널 → 루모스가든',
       '[일반도로2] 석대(반여)화훼단지 → 기장동원로얄CC → 기장초등학교 → 연화터널 → 루모스가든',
       '[고속도로] 동부산TG → 용궁사 → 반얀트리 리조트 바로앞 → 루모스가든',
+      '셔틀버스 이용안내: 드라이브 오시리아 주차장 입구 → 루모스가든',
+      '예식 2시간 전부터 상시 운행합니다.',
     ],
   },
   {
@@ -124,19 +126,6 @@ const parkingGuide = [
     title: '드라이브 오시리아 주차장 (셔틀버스 운영)',
     address: '부산광역시 기장군 기장읍 기장해안로 298 (드라이브 오시리아 주차장)',
     note: '오시리아 주차장에 주차 후 셔틀버스로 이동해 주세요.',
-  },
-]
-
-const shuttleGuide = [
-  {
-    order: 1,
-    route: '드라이브 오시리아 주차장 입구 → 루모스가든',
-    detail: '예식 2시간 전부터 상시 운행합니다.',
-  },
-  {
-    order: 2,
-    route: '부산역 셔틀버스 노선: 김해공항 → 부산역 → 기장 루모스가든',
-    detail: '부산역 셔틀버스는 이용 예정 하객께 개별 연락드립니다.',
   },
 ]
 
@@ -848,18 +837,23 @@ function App() {
 
     const barHeight = categoryBarRef.current?.offsetHeight ?? 0
     const offset = barHeight + 24
-    let next = GUEST_CATEGORY_ITEMS[0].id
+    const orderedSections = GUEST_CATEGORY_ITEMS.map((item) => ({
+      id: item.id,
+      node: sectionRefs[item.id]?.current,
+    }))
+      .filter((item) => item.node)
+      .sort((a, b) => a.node.offsetTop - b.node.offsetTop)
 
-    GUEST_CATEGORY_ITEMS.forEach((item) => {
-      const node = sectionRefs[item.id]?.current
-      if (!node) return
-      const top = node.getBoundingClientRect().top - offset
+    let next = orderedSections[0]?.id ?? GUEST_CATEGORY_ITEMS[0].id
+
+    orderedSections.forEach((item) => {
+      const top = item.node.getBoundingClientRect().top - offset
       if (top <= 0) next = item.id
     })
 
     const isNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4
-    if (isNearBottom) {
-      next = GUEST_CATEGORY_ITEMS[GUEST_CATEGORY_ITEMS.length - 1].id
+    if (isNearBottom && orderedSections.length > 0) {
+      next = orderedSections[orderedSections.length - 1].id
     }
 
     setActiveCategory((prev) => (prev === next ? prev : next))
@@ -988,13 +982,7 @@ function App() {
             style={{ '--reveal-delay': '140ms' }}
           >
             <InviteSectionTitle kicker="RESPONSE" title="참석 여부 회신 · 안내 말씀" />
-            <p className="rsvp-highlight">
-              <strong>지정 좌석제</strong>로 진행되어 참석 여부 회신을 부탁드립니다.
-              <br />
-              하단 버튼으로 회신해 주시면 좌석 준비에 큰 도움이 됩니다.
-              <br />
-              변경이 생기면 언제든 편하게 말씀해 주세요.
-            </p>
+            <p className="rsvp-highlight"><strong>지정 좌석제</strong>로 진행되어 참석 여부 회신을 부탁드립니다. 하단 버튼으로 회신해 주시면 좌석 준비에 큰 도움이 됩니다.</p>
             <ul className="notice-list">
               {noticeList.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
@@ -1003,6 +991,7 @@ function App() {
             <button type="button" className="btn btn-primary rsvp-open-btn" onClick={openRsvpModal}>
               간단히 회신하기
             </button>
+            <p className="rsvp-subnote">변경이 생기면 언제든 편하게 말씀해 주세요.</p>
           </section>
 
           <section
@@ -1037,7 +1026,7 @@ function App() {
                 </li>
               ))}
             </ul>
-            <p className="sub-section-label">오시는 길 · 주차 및 셔틀 안내</p>
+            <p className="sub-section-label">오시는길</p>
             <div className="map-frame">
               {!mapBroken ? (
                 <img
@@ -1061,7 +1050,6 @@ function App() {
                 구글지도
               </a>
             </div>
-            <p className="sub-section-label">교통 · 주차 · 셔틀 안내</p>
             <details className="transport-group transport-collapse transport-master-collapse" open>
               <summary className="transport-summary">전체 안내 보기</summary>
               <div className="transport-collapse-body transport-master-body">
@@ -1070,7 +1058,7 @@ function App() {
                   <div className="transport-collapse-body">
                     <div className="transport-groups transport-inner-groups">
                       {transportSections.map((group) => (
-                        <details key={group.title} className="transport-group transport-collapse transport-item-collapse">
+                        <details key={group.title} className="transport-group transport-collapse transport-item-collapse" open>
                           <summary className="transport-summary">{group.title}</summary>
                           <div className="transport-collapse-body">
                             <ul className="transport-list">
@@ -1135,22 +1123,6 @@ function App() {
                   </div>
                 </details>
 
-                <details className="transport-group transport-collapse transport-section-collapse">
-                  <summary className="transport-summary">셔틀버스 이용안내</summary>
-                  <div className="transport-collapse-body">
-                    <article className="transport-group transport-inner-card">
-                      <ul className="transport-list">
-                        {shuttleGuide.map((item) => (
-                          <li key={item.order}>
-                            <strong>{item.route}</strong>
-                            <br />
-                            {item.detail}
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  </div>
-                </details>
               </div>
             </details>
           </section>

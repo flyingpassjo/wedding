@@ -130,7 +130,7 @@ const parkingGuide = [
 ]
 
 const accounts = [
-  { side: '신부 측', bank: '토스', number: '1000-3369-0452', holder: '조영서' },
+  { side: '신부 측', bank: '토스뱅크', number: '1000-3369-0452', holder: '조영서' },
   { side: '신랑 측', bank: '토스뱅크', number: '1001-8275-9733', holder: '윤원태' },
 ]
 

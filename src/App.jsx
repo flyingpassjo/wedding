@@ -129,9 +129,60 @@ const parkingGuide = [
   },
 ]
 
-const accounts = [
-  { side: '신부 측', bank: '토스뱅크', number: '1000-3369-0452', holder: '조영서' },
-  { side: '신랑 측', bank: '토스뱅크', number: '1001-8275-9733', holder: '윤원태' },
+const contactAccountGroups = [
+  {
+    key: 'groom-side',
+    sideLabel: '신랑측',
+    lineage: `${wedding.groomParents}의 아들`,
+    name: wedding.groom,
+    phone: wedding.groomPhone,
+    entries: [
+      {
+        key: 'groom-self',
+        name: wedding.groom,
+        bank: '토스뱅크',
+        number: '1001-8275-9733',
+        holder: wedding.groom,
+      },
+      {
+        key: 'groom-father',
+        name: '윤상열',
+        bank: '농협',
+        number: '351-6706-2333-43',
+        holder: '윤상열',
+      },
+    ],
+  },
+  {
+    key: 'bride-side',
+    sideLabel: '신부측',
+    lineage: `${wedding.brideParents}의 딸`,
+    name: wedding.bride,
+    phone: wedding.bridePhone,
+    entries: [
+      {
+        key: 'bride-self',
+        name: wedding.bride,
+        bank: '토스뱅크',
+        number: '1000-3369-0452',
+        holder: wedding.bride,
+      },
+      {
+        key: 'bride-mother',
+        name: '강명희',
+        bank: '토스뱅크',
+        number: '1000-4972-2831',
+        holder: '강명희',
+      },
+      {
+        key: 'bride-father',
+        name: '조현철',
+        bank: '농협',
+        number: '888-02-209041',
+        holder: '조현철',
+      },
+    ],
+  },
 ]
 
 const RSVP_INITIAL = {
@@ -404,6 +455,80 @@ function InviteSectionTitle({ kicker, title }) {
   )
 }
 
+function ContactAccountGroup({ group, expandedAccountKeys, onToggleAccount, onCopy, copiedKey }) {
+  return (
+    <article className="contact-family-card">
+      <div className="contact-family-intro">
+        <p className="contact-side">{group.sideLabel}</p>
+        <p className="contact-lineage">{group.lineage}</p>
+        <p className="contact-role">{group.name}</p>
+        <div className="contact-family-phone-row">
+          <span className="contact-label">전화번호</span>
+          <a className="contact-phone-link" href={`tel:${group.phone.replaceAll('-', '')}`}>
+            {group.phone}
+          </a>
+        </div>
+        <div className="contact-actions contact-family-actions">
+          <a className="btn btn-line" href={`tel:${group.phone.replaceAll('-', '')}`}>
+            전화하기
+          </a>
+        </div>
+      </div>
+
+      <div className="account-accordion-list">
+        {group.entries.map((entry) => {
+          const isOpen = Boolean(expandedAccountKeys[entry.key])
+          const accountCopyKey = `account-${entry.key}`
+
+          return (
+            <div key={entry.key} className={`account-accordion-item ${isOpen ? 'open' : ''}`}>
+              <button
+                type="button"
+                className="account-accordion-trigger"
+                onClick={() => onToggleAccount(entry.key)}
+                aria-expanded={isOpen}
+              >
+                <span className="account-accordion-name">{entry.name}</span>
+                <span className="account-accordion-chevron" aria-hidden="true">
+                  ⌄
+                </span>
+              </button>
+
+              {isOpen ? (
+                <div className="account-accordion-panel">
+                  {entry.pending ? (
+                    <p className="account-accordion-pending">{entry.pendingMessage}</p>
+                  ) : (
+                    <>
+                      <p className="account-accordion-account">
+                        {entry.bank} {entry.number}
+                      </p>
+                      <button
+                        type="button"
+                        className={`account-copy-btn copy-btn ${copiedKey === accountCopyKey ? 'is-copied' : ''}`}
+                        onClick={() =>
+                          onCopy(
+                            `${entry.bank ?? ''} ${entry.number ?? ''} ${entry.holder ?? entry.name ?? ''}`,
+                            `${entry.name} 계좌`,
+                            accountCopyKey,
+                          )
+                        }
+                        aria-label={`${entry.name} 계좌 복사`}
+                      >
+                        <span className="copy-icon-squares" aria-hidden="true" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          )
+        })}
+      </div>
+    </article>
+  )
+}
+
 function App() {
   const [screen, setScreen] = useState(getInitialScreen)
   const [toast, setToast] = useState('')
@@ -414,6 +539,7 @@ function App() {
   const [openingFade, setOpeningFade] = useState(false)
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [expandedAccountKeys, setExpandedAccountKeys] = useState({})
   const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(false)
 
   const [rsvp, setRsvp] = useState(RSVP_INITIAL)
@@ -469,27 +595,6 @@ function App() {
     return Math.round((adminSummary.shuttle / adminSummary.attend) * 100)
   }, [adminSummary])
   const sheetXlsxUrl = useMemo(() => toXlsxDownloadUrl(GOOGLE_SHEET_URL), [])
-  const contactAccountCards = useMemo(
-    () => [
-      {
-        key: 'groom',
-        sideLabel: '신랑측',
-        lineage: `${wedding.groomParents}의 아들`,
-        name: wedding.groom,
-        phone: wedding.groomPhone,
-        account: accounts.find((item) => item.side === '신랑 측'),
-      },
-      {
-        key: 'bride',
-        sideLabel: '신부측',
-        lineage: `${wedding.brideParents}의 딸`,
-        name: wedding.bride,
-        phone: wedding.bridePhone,
-        account: accounts.find((item) => item.side === '신부 측'),
-      },
-    ],
-    [],
-  )
   const snapUploadUrl = OPEN_CHAT_URL
   const mapLinks = useMemo(() => {
     const query = encodeURIComponent('부산광역시 기장군 기장읍 기장해안로 377')
@@ -709,6 +814,13 @@ function App() {
   const closeContactModal = () => {
     setIsContactModalOpen(false)
   }
+
+  const toggleAccount = useCallback((key) => {
+    setExpandedAccountKeys((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }))
+  }, [])
 
   const adjustRsvpCount = (key, diff) => {
     setRsvp((prev) => {
@@ -979,7 +1091,7 @@ function App() {
           <section
             className={`card invite-card ${activeCategory === 'rsvp' || jumpHighlightId === 'rsvp' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'rsvp' ? 'section-click-ring' : ''}`}
             ref={rsvpSectionRef}
-            style={{ '--reveal-delay': '140ms' }}
+            style={{ '--reveal-delay': '140ms', order: 1 }}
           >
             <InviteSectionTitle kicker="RESPONSE" title="참석 여부 회신 · 안내 말씀" />
             <p className="rsvp-highlight"><strong>지정 좌석제</strong>로 진행되어 참석 여부 회신을 부탁드립니다. 하단 버튼으로 회신해 주시면 좌석 준비에 큰 도움이 됩니다.</p>
@@ -997,7 +1109,7 @@ function App() {
           <section
             className={`card invite-card ${activeCategory === 'info' || jumpHighlightId === 'info' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'info' ? 'section-click-ring' : ''}`}
             ref={infoSectionRef}
-            style={{ '--reveal-delay': '280ms' }}
+            style={{ '--reveal-delay': '400ms', order: 3 }}
           >
             <InviteSectionTitle kicker="INFORMATION" title="예식 정보 · 오시는 길" />
             <dl className="essential-list">
@@ -1130,49 +1242,19 @@ function App() {
           <section
             className={`card invite-card ${activeCategory === 'contact' || jumpHighlightId === 'contact' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'contact' ? 'section-click-ring' : ''}`}
             ref={contactSectionRef}
-            style={{ '--reveal-delay': '400ms' }}
+            style={{ '--reveal-delay': '280ms', order: 2 }}
           >
             <InviteSectionTitle kicker="CONTACT" title="연락처 · 마음 전하실 곳" />
             <div className="contact-account-grid">
-              {contactAccountCards.map((item) => (
-                <article key={item.key} className="contact-account-card">
-                  {(() => {
-                    const accountCopyKey = `account-${item.key}`
-                    return (
-                      <>
-                  <p className="contact-side">{item.sideLabel}</p>
-                  <p className="contact-lineage">{item.lineage}</p>
-                  <p className="contact-role">{item.name}</p>
-                  <p className="contact-meta">
-                    <span className="contact-label">계좌번호</span>
-                    {item.account?.bank} {item.account?.number}
-                  </p>
-                  <p className="contact-meta">
-                    <span className="contact-label">전화번호</span>
-                    {item.phone}
-                  </p>
-                  <div className="button-row contact-actions">
-                    <a className="btn btn-line" href={`tel:${item.phone.replaceAll('-', '')}`}>
-                      전화하기
-                    </a>
-                    <button
-                      type="button"
-                      className={`btn btn-line copy-btn ${copiedKey === accountCopyKey ? 'is-copied' : ''}`}
-                      onClick={() =>
-                        onCopy(
-                          `${item.account?.bank ?? ''} ${item.account?.number ?? ''} ${item.account?.holder ?? ''}`,
-                          `${item.sideLabel} 계좌`,
-                          accountCopyKey,
-                        )
-                      }
-                    >
-                      {copiedKey === accountCopyKey ? '복사 완료' : '계좌 복사'}
-                    </button>
-                  </div>
-                      </>
-                    )
-                  })()}
-                </article>
+              {contactAccountGroups.map((group) => (
+                <ContactAccountGroup
+                  key={group.key}
+                  group={group}
+                  expandedAccountKeys={expandedAccountKeys}
+                  onToggleAccount={toggleAccount}
+                  onCopy={onCopy}
+                  copiedKey={copiedKey}
+                />
               ))}
             </div>
           </section>
@@ -1180,7 +1262,7 @@ function App() {
           <section
             className={`card invite-card ${activeCategory === 'snap' || jumpHighlightId === 'snap' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'snap' ? 'section-click-ring' : ''}`}
             ref={snapSectionRef}
-            style={{ '--reveal-delay': '470ms' }}
+            style={{ '--reveal-delay': '520ms', order: 4 }}
           >
             <div className="snap-collage" aria-hidden="true">
               <div className="snap-photo groom">
@@ -1426,47 +1508,17 @@ function App() {
                 ×
               </button>
             </header>
-            <p className="contact-popup-desc">신랑 · 신부 연락처와 계좌 정보를 확인하실 수 있습니다.</p>
+            <p className="contact-popup-desc">원하시는 항목을 펼쳐 연락처와 계좌 정보를 확인해 주세요.</p>
             <div className="contact-account-grid">
-              {contactAccountCards.map((item) => (
-                <article key={item.key} className="contact-account-card">
-                  {(() => {
-                    const accountCopyKey = `account-${item.key}`
-                    return (
-                      <>
-                  <p className="contact-side">{item.sideLabel}</p>
-                  <p className="contact-lineage">{item.lineage}</p>
-                  <p className="contact-role">{item.name}</p>
-                  <p className="contact-meta">
-                    <span className="contact-label">계좌번호</span>
-                    {item.account?.bank} {item.account?.number}
-                  </p>
-                  <p className="contact-meta">
-                    <span className="contact-label">전화번호</span>
-                    {item.phone}
-                  </p>
-                  <div className="button-row contact-actions">
-                    <a className="btn btn-line" href={`tel:${item.phone.replaceAll('-', '')}`}>
-                      전화하기
-                    </a>
-                    <button
-                      type="button"
-                      className={`btn btn-line copy-btn ${copiedKey === accountCopyKey ? 'is-copied' : ''}`}
-                      onClick={() =>
-                        onCopy(
-                          `${item.account?.bank ?? ''} ${item.account?.number ?? ''} ${item.account?.holder ?? ''}`,
-                          `${item.sideLabel} 계좌`,
-                          accountCopyKey,
-                        )
-                      }
-                    >
-                      {copiedKey === accountCopyKey ? '복사 완료' : '계좌 복사'}
-                    </button>
-                  </div>
-                      </>
-                    )
-                  })()}
-                </article>
+              {contactAccountGroups.map((group) => (
+                <ContactAccountGroup
+                  key={group.key}
+                  group={group}
+                  expandedAccountKeys={expandedAccountKeys}
+                  onToggleAccount={toggleAccount}
+                  onCopy={onCopy}
+                  copiedKey={copiedKey}
+                />
               ))}
             </div>
           </section>

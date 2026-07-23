@@ -1019,14 +1019,20 @@
 .contact-account-grid {
   margin-top: 12px;
   display: grid;
-  gap: 8px;
+  gap: 14px;
 }
 
-.contact-account-card {
-  border: 1px solid #ecd8e1;
+.contact-family-card {
+  border: 1px solid #dacfd7;
   border-radius: 6px;
-  background: #fff;
-  padding: 12px;
+  background: rgba(255, 251, 252, 0.92);
+  overflow: hidden;
+}
+
+.contact-family-intro {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px 12px;
 }
 
 .contact-meta {
@@ -1046,6 +1052,132 @@
 
 .contact-actions {
   margin-top: 10px;
+}
+
+.contact-family-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.contact-phone-link {
+  color: #5f4f58;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-family-actions {
+  margin-top: 8px;
+}
+
+.contact-family-actions .btn {
+  min-width: 136px;
+}
+
+.account-accordion-list {
+  border-top: 1px solid #eee2e8;
+}
+
+.account-accordion-item + .account-accordion-item {
+  border-top: 1px solid #eee2e8;
+}
+
+.account-accordion-trigger {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 17px 16px;
+  color: #4e4348;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-accordion-name {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.account-accordion-chevron {
+  color: #b8afbc;
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.account-accordion-item.open .account-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.account-accordion-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid #f1e7ec;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.account-accordion-account {
+  margin: 0;
+  color: #5a4f56;
+  font-size: 15px;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.account-accordion-pending {
+  margin: 0;
+  color: #8d8087;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.account-copy-btn {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.copy-icon-squares {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.copy-icon-squares::before,
+.copy-icon-squares::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1.4px solid #cec5cc;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.copy-icon-squares::before {
+  top: -4px;
+  left: -4px;
+}
+
+.copy-icon-squares::after {
+  top: 0;
+  left: 0;
 }
 
 .copy-btn {
@@ -1070,9 +1202,8 @@
 .copy-btn.is-copied::after {
   content: '✓';
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  inset: auto auto 6px 50%;
+  transform: translateX(-50%);
   font-size: 12px;
   font-weight: 700;
   color: #1d5a38;
@@ -2785,7 +2916,7 @@ input[type='file'] {
   color: #5e5046;
 }
 
-.screen-guest .contact-account-card,
+.screen-guest .contact-family-card,
 .screen-guest .notice-list li,
 .screen-guest .timeline-list li,
 .screen-guest .transport-group,
@@ -2793,6 +2924,10 @@ input[type='file'] {
 .screen-guest .map-frame {
   border-color: #eae4de;
   background: #fbf9f6;
+}
+
+.screen-guest .account-accordion-panel {
+  background: #fffdfc;
 }
 
 .screen-guest .stop-guide-summary,

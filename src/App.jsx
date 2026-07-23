@@ -59,11 +59,7 @@ const wedding = {
 const timeline = [
   { time: '17:00', title: '입장 · 웰컴드링크' },
   { time: '18:00', title: '1부 예식' },
-  {
-    time: '19:00',
-    title: '2부 파티',
-    desc: '(신랑·신부의 친구 및 가까운 지인들과 함께하는 캐주얼한 파티)',
-  },
+  { time: '19:00', title: '2부 파티 (뒷풀이)' },
   { time: '21:00', title: '종료' },
 ]
 
@@ -133,9 +129,6 @@ const contactAccountGroups = [
   {
     key: 'groom-side',
     sideLabel: '신랑측',
-    lineage: `${wedding.groomParents}의 아들`,
-    name: wedding.groom,
-    phone: wedding.groomPhone,
     entries: [
       {
         key: 'groom-self',
@@ -156,9 +149,6 @@ const contactAccountGroups = [
   {
     key: 'bride-side',
     sideLabel: '신부측',
-    lineage: `${wedding.brideParents}의 딸`,
-    name: wedding.bride,
-    phone: wedding.bridePhone,
     entries: [
       {
         key: 'bride-self',
@@ -168,18 +158,18 @@ const contactAccountGroups = [
         holder: wedding.bride,
       },
       {
-        key: 'bride-mother',
-        name: '강명희',
-        bank: '토스뱅크',
-        number: '1000-4972-2831',
-        holder: '강명희',
-      },
-      {
         key: 'bride-father',
         name: '조현철',
         bank: '농협',
         number: '888-02-209041',
         holder: '조현철',
+      },
+      {
+        key: 'bride-mother',
+        name: '강명희',
+        bank: '토스뱅크',
+        number: '1000-4972-2831',
+        holder: '강명희',
       },
     ],
   },
@@ -202,7 +192,7 @@ const RSVP_INITIAL = {
 
 const GUEST_CATEGORY_ITEMS = [
   { id: 'rsvp', label: '회신', mobileLabel: '회신' },
-  { id: 'contact', label: '연락/계좌', mobileLabel: '연락/계좌' },
+  { id: 'contact', label: '계좌', mobileLabel: '계좌' },
   { id: 'info', label: '안내', mobileLabel: '안내' },
   { id: 'snap', label: '이벤트', mobileLabel: '이벤트' },
 ]
@@ -460,19 +450,6 @@ function ContactAccountGroup({ group, expandedAccountKeys, onToggleAccount, onCo
     <article className="contact-family-card">
       <div className="contact-family-intro">
         <p className="contact-side">{group.sideLabel}</p>
-        <p className="contact-lineage">{group.lineage}</p>
-        <p className="contact-role">{group.name}</p>
-        <div className="contact-family-phone-row">
-          <span className="contact-label">전화번호</span>
-          <a className="contact-phone-link" href={`tel:${group.phone.replaceAll('-', '')}`}>
-            {group.phone}
-          </a>
-        </div>
-        <div className="contact-actions contact-family-actions">
-          <a className="btn btn-line" href={`tel:${group.phone.replaceAll('-', '')}`}>
-            전화하기
-          </a>
-        </div>
       </div>
 
       <div className="account-accordion-list">
@@ -597,7 +574,7 @@ function App() {
   const sheetXlsxUrl = useMemo(() => toXlsxDownloadUrl(GOOGLE_SHEET_URL), [])
   const snapUploadUrl = OPEN_CHAT_URL
   const mapLinks = useMemo(() => {
-    const query = encodeURIComponent('부산광역시 기장군 기장읍 기장해안로 377')
+    const query = encodeURIComponent('루모스가든')
     return {
       naver: `https://map.naver.com/v5/search/${query}`,
       kakao: `https://map.kakao.com/link/search/${query}`,
@@ -605,7 +582,7 @@ function App() {
     }
   }, [])
   const parkingMapLinks = useMemo(() => {
-    const query = encodeURIComponent('부산 기장군 기장해안로 298')
+    const query = encodeURIComponent('부산광역시 기장군 기장읍 기장해안로 298')
     return {
       naver: `https://map.naver.com/v5/search/${query}`,
       kakao: `https://map.kakao.com/link/search/${query}`,
@@ -1083,7 +1060,7 @@ function App() {
               <p className="family-line">{wedding.brideParents}의 딸 {wedding.bride}</p>
               <p className="family-sign">{wedding.groom} · {wedding.bride} 올림</p>
               <button type="button" className="cover-contact-open-btn" onClick={openContactModal}>
-                연락처 · 마음 전하실 곳
+                마음 전하실 곳
               </button>
             </div>
           </section>
@@ -1244,7 +1221,7 @@ function App() {
             ref={contactSectionRef}
             style={{ '--reveal-delay': '280ms', order: 2 }}
           >
-            <InviteSectionTitle kicker="CONTACT" title="연락처 · 마음 전하실 곳" />
+            <InviteSectionTitle kicker="CONTACT" title="마음 전하실 곳" />
             <div className="contact-account-grid">
               {contactAccountGroups.map((group) => (
                 <ContactAccountGroup
@@ -1503,12 +1480,12 @@ function App() {
         <div className="rsvp-modal-backdrop" onClick={closeContactModal} role="dialog" aria-modal="true">
           <section className="contact-popup-modal" onClick={(event) => event.stopPropagation()}>
             <header className="contact-popup-head">
-              <h4>연락처 · 마음 전하실 곳</h4>
+              <h4>마음 전하실 곳</h4>
               <button type="button" className="rsvp-close-x" onClick={closeContactModal} aria-label="닫기">
                 ×
               </button>
             </header>
-            <p className="contact-popup-desc">원하시는 항목을 펼쳐 연락처와 계좌 정보를 확인해 주세요.</p>
+            <p className="contact-popup-desc">원하시는 항목을 펼쳐 계좌 정보를 확인해 주세요.</p>
             <div className="contact-account-grid">
               {contactAccountGroups.map((group) => (
                 <ContactAccountGroup
@@ -1528,9 +1505,11 @@ function App() {
       {isGuestScreen && isRsvpModalOpen ? (
         <div className="rsvp-modal-backdrop" onClick={closeRsvpModal} role="dialog" aria-modal="true">
           <section className="rsvp-form-modal rsvp-form-modal-direct" onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="rsvp-close-x rsvp-close-sticky" onClick={closeRsvpModal} aria-label="닫기">
-              ×
-            </button>
+            <div className="rsvp-close-wrap">
+              <button type="button" className="rsvp-close-x rsvp-close-sticky" onClick={closeRsvpModal} aria-label="닫기">
+                닫기 X
+              </button>
+            </div>
 
             <div className="rsvp-form-hero">
               <img src={OPENING_IMAGE} alt="참석 의사 전달 안내" />

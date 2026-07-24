@@ -59,6 +59,7 @@ const wedding = {
 const timeline = [
   { time: '17:00', title: '입장 · 웰컴드링크' },
   { time: '18:00', title: '1부 예식' },
+  { time: '18:40', title: '1부 예식 종료' },
   { time: '19:00', title: '2부 파티 (뒷풀이)' },
   { time: '21:00', title: '종료' },
 ]

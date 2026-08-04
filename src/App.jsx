@@ -37,6 +37,25 @@ const SNAP_COLLAGE_IMAGES = {
   bride: withBase('images/snap-collage-right.jpg'),
 }
 
+const GALLERY_IMAGES = [
+  'Wedding1.jpeg',
+  'Wedding2.jpeg',
+  'Wedding3.jpeg',
+  'Wedding4.jpeg',
+  'Wedding5.jpeg',
+  'Wedding6.jpeg',
+  'Wedding7.png',
+  'Wedding8.png',
+  'Wedding9.png',
+  'Wedding11.jpeg',
+  'Wedding12.jpeg',
+  'Wedding13.jpeg',
+].map((fileName, index) => ({
+  id: index + 1,
+  src: withBase(`images/gallery/${fileName}`),
+  alt: `웨딩 갤러리 사진 ${index + 1}`,
+}))
+
 const wedding = {
   groom: '윤원태',
   bride: '조영서',
@@ -195,6 +214,7 @@ const GUEST_CATEGORY_ITEMS = [
   { id: 'rsvp', label: '회신', mobileLabel: '회신' },
   { id: 'contact', label: '계좌', mobileLabel: '계좌' },
   { id: 'info', label: '안내', mobileLabel: '안내' },
+  { id: 'gallery', label: '갤러리', mobileLabel: '갤러리' },
   { id: 'snap', label: '이벤트', mobileLabel: '이벤트' },
 ]
 
@@ -517,6 +537,7 @@ function App() {
   const [openingFade, setOpeningFade] = useState(false)
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(null)
   const [expandedAccountKeys, setExpandedAccountKeys] = useState({})
   const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(false)
 
@@ -549,6 +570,7 @@ function App() {
   const rsvpSectionRef = useRef(null)
   const contactSectionRef = useRef(null)
   const infoSectionRef = useRef(null)
+  const gallerySectionRef = useRef(null)
   const snapSectionRef = useRef(null)
 
   const sectionRefs = useMemo(
@@ -556,6 +578,7 @@ function App() {
       rsvp: rsvpSectionRef,
       contact: contactSectionRef,
       info: infoSectionRef,
+      gallery: gallerySectionRef,
       snap: snapSectionRef,
     }),
     [],
@@ -642,13 +665,22 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (!isRsvpModalOpen && !isContactModalOpen) return undefined
+    if (!isRsvpModalOpen && !isContactModalOpen && selectedGalleryIndex == null) return undefined
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
         setIsRsvpModalOpen(false)
         setIsContactModalOpen(false)
+        setSelectedGalleryIndex(null)
+      }
+      if (selectedGalleryIndex != null && event.key === 'ArrowRight') {
+        setSelectedGalleryIndex((prevIndex) => (prevIndex == null ? prevIndex : (prevIndex + 1) % GALLERY_IMAGES.length))
+      }
+      if (selectedGalleryIndex != null && event.key === 'ArrowLeft') {
+        setSelectedGalleryIndex((prevIndex) =>
+          prevIndex == null ? prevIndex : (prevIndex - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length,
+        )
       }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -656,7 +688,7 @@ function App() {
       window.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = prev
     }
-  }, [isRsvpModalOpen, isContactModalOpen])
+  }, [isRsvpModalOpen, isContactModalOpen, selectedGalleryIndex])
 
   useEffect(() => {
     if (!showOpening) return undefined
@@ -792,6 +824,22 @@ function App() {
   const closeContactModal = () => {
     setIsContactModalOpen(false)
   }
+
+  const openGalleryModal = useCallback((index) => {
+    setSelectedGalleryIndex(index)
+  }, [])
+
+  const closeGalleryModal = useCallback(() => {
+    setSelectedGalleryIndex(null)
+  }, [])
+
+  const showPrevGalleryImage = useCallback(() => {
+    setSelectedGalleryIndex((prev) => (prev == null ? prev : (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length))
+  }, [])
+
+  const showNextGalleryImage = useCallback(() => {
+    setSelectedGalleryIndex((prev) => (prev == null ? prev : (prev + 1) % GALLERY_IMAGES.length))
+  }, [])
 
   const toggleAccount = useCallback((key) => {
     setExpandedAccountKeys((prev) => ({
@@ -1238,9 +1286,30 @@ function App() {
           </section>
 
           <section
+            className={`card invite-card ${activeCategory === 'gallery' || jumpHighlightId === 'gallery' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'gallery' ? 'section-click-ring' : ''}`}
+            ref={gallerySectionRef}
+            style={{ '--reveal-delay': '470ms', order: 4 }}
+          >
+            <InviteSectionTitle kicker="GALLERY" title="갤러리" />
+            <div className="gallery-grid">
+              {GALLERY_IMAGES.map((image, index) => (
+                <button
+                  key={image.src}
+                  type="button"
+                  className="gallery-card"
+                  onClick={() => openGalleryModal(index)}
+                  aria-label={`${index + 1}번 사진 크게 보기`}
+                >
+                  <img src={image.src} alt={image.alt} loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section
             className={`card invite-card ${activeCategory === 'snap' || jumpHighlightId === 'snap' ? 'section-jump-focus' : ''} ${jumpHighlightId === 'snap' ? 'section-click-ring' : ''}`}
             ref={snapSectionRef}
-            style={{ '--reveal-delay': '520ms', order: 4 }}
+            style={{ '--reveal-delay': '560ms', order: 5 }}
           >
             <div className="snap-collage" aria-hidden="true">
               <div className="snap-photo groom">
@@ -1499,6 +1568,28 @@ function App() {
                 />
               ))}
             </div>
+          </section>
+        </div>
+      ) : null}
+
+      {isGuestScreen && selectedGalleryIndex != null ? (
+        <div className="gallery-modal-backdrop" onClick={closeGalleryModal} role="dialog" aria-modal="true">
+          <section className="gallery-modal" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="gallery-modal-close" onClick={closeGalleryModal} aria-label="갤러리 닫기">
+              닫기
+            </button>
+            <button type="button" className="gallery-modal-arrow prev" onClick={showPrevGalleryImage} aria-label="이전 사진">
+              ‹
+            </button>
+            <figure className="gallery-modal-figure">
+              <img src={GALLERY_IMAGES[selectedGalleryIndex].src} alt={GALLERY_IMAGES[selectedGalleryIndex].alt} />
+              <figcaption>
+                {selectedGalleryIndex + 1} / {GALLERY_IMAGES.length}
+              </figcaption>
+            </figure>
+            <button type="button" className="gallery-modal-arrow next" onClick={showNextGalleryImage} aria-label="다음 사진">
+              ›
+            </button>
           </section>
         </div>
       ) : null}

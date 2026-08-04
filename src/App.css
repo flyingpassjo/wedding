@@ -1310,6 +1310,114 @@
   white-space: pre-line;
 }
 
+.gallery-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gallery-card {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid #e7d9df;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8f4f6;
+  box-shadow: 0 10px 24px rgba(52, 36, 42, 0.08);
+}
+
+.gallery-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.gallery-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(18, 13, 16, 0.82);
+}
+
+.gallery-modal {
+  position: relative;
+  width: min(100%, 760px);
+  display: grid;
+  place-items: center;
+}
+
+.gallery-modal-figure {
+  margin: 0;
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.gallery-modal-figure img {
+  display: block;
+  width: 100%;
+  max-height: min(80svh, 920px);
+  object-fit: contain;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.gallery-modal-figure figcaption {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.gallery-modal-close,
+.gallery-modal-arrow {
+  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.gallery-modal-close {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  z-index: 2;
+  min-width: 72px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gallery-modal-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 34px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+
+.gallery-modal-arrow.prev {
+  left: 8px;
+}
+
+.gallery-modal-arrow.next {
+  right: 8px;
+}
+
 h3 {
   margin: 0;
   font-size: 18px;
@@ -2634,6 +2742,36 @@ input[type='file'] {
     padding: 0 6px;
     font-size: 11px;
     white-space: nowrap;
+  }
+
+  .gallery-grid {
+    gap: 8px;
+  }
+
+  .gallery-modal-backdrop {
+    padding: 12px;
+  }
+
+  .gallery-modal-close {
+    top: -4px;
+    right: 0;
+    min-width: 64px;
+    height: 36px;
+    padding: 0 12px;
+  }
+
+  .gallery-modal-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 30px;
+  }
+
+  .gallery-modal-arrow.prev {
+    left: 0;
+  }
+
+  .gallery-modal-arrow.next {
+    right: 0;
   }
 
   .stop-guide-title {

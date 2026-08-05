@@ -93,16 +93,6 @@ export default function JapaneseInvitation() {
               <dt>会場</dt>
               <dd>ルモスガーデン（루모스가든 / Lumos Garden）</dd>
             </div>
-          </dl>
-        </section>
-
-        <section className="card invite-card">
-          <SectionTitle kicker="LOCATION" title="会場へのアクセス" />
-          <dl className="essential-list">
-            <div>
-              <dt>場所</dt>
-              <dd>ルモスガーデン（루모스가든 / Lumos Garden）</dd>
-            </div>
             <div>
               <dt>住所</dt>
               <dd>韓国・釜山広域市 機張郡 機張邑 機張海岸路 377</dd>

@@ -27,7 +27,7 @@ const timeline = [
   { time: '17:00', title: '受付・ウェルカムドリンク' },
   { time: '18:00', title: '挙式' },
   { time: '18:40', title: '挙式終了' },
-  { time: '19:00', title: '祝宴・ウェディングパーティー' },
+  { time: '19:00', title: 'ウェディングパーティー' },
   { time: '21:00', title: '終了' },
 ]
 
@@ -74,10 +74,10 @@ export default function JapaneseInvitation() {
             <p className="invite-venue">ルモスガーデン<br />韓国・釜山（プサン）／機張（キジャン）</p>
           </div>
           <div className="invite-hero-bottom">
-            <p className="invite-hero-message">大切な皆さまをお招きします</p>
+            <p className="invite-hero-message">皆さまを心よりご招待申し上げます</p>
             <div className="invite-cover-greeting">
-              <p>私たちは、お互いに寄り添いながら、これからの人生を共に歩んでいくことにいたしました。</p>
-              <p>ご多用のところ恐縮ではございますが、私たちの新たな門出を見守り、祝福していただけましたら幸いです。</p>
+              <p>このたび、私たちは結婚式を挙げる運びとなりました。</p>
+              <p>ご多用のところ誠に恐縮ではございますが、私たちの新たな門出にお立ち会いいただけましたら幸いに存じます。</p>
             </div>
           </div>
         </section>
@@ -104,9 +104,9 @@ export default function JapaneseInvitation() {
         <section className="card invite-card jp-information-card">
           <SectionTitle kicker="INFORMATION" title="ご案内" />
           <ul className="notice-list jp-information-list">
-            <li>会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にあります。</li>
-            <li>宿泊施設と移動手段をご用意しております。詳細は個別にご案内いたしますので、どうぞご安心ください。</li>
-            <li className="jp-response-note">ご出欠につきましては、お手数ですが、このLINEのメッセージでご返信をお願いいたします。</li>
+            <li>会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にございます。</li>
+            <li>宿泊施設および移動手段につきましては、ご出欠を確認後、個別にご案内申し上げます。</li>
+            <li className="jp-response-note">ご出欠につきましては、誠に恐れ入りますが、このLINEのトークにてご返信くださいますようお願い申し上げます。</li>
           </ul>
         </section>
 

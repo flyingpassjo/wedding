@@ -442,6 +442,34 @@
   margin-top: 10px;
 }
 
+.jp-invite .invite-title,
+.jp-invite .invite-hero-message,
+.jp-invite .section-title {
+  font-family: 'Noto Serif JP', serif;
+}
+
+.jp-invite .invite-title {
+  font-size: clamp(29px, 8vw, 42px);
+  letter-spacing: 0.01em;
+}
+
+.jp-invite .invite-cover-greeting p {
+  line-break: strict;
+}
+
+.jp-location-note {
+  margin: 14px 0 0;
+  color: #725662;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.jp-map-link {
+  width: 100%;
+  margin-top: 14px;
+  text-align: center;
+}
+
 .cover-contact-open-btn {
   margin-top: 12px;
   border: 1px solid rgba(255, 255, 255, 0.66);

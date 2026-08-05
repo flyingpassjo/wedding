@@ -105,7 +105,7 @@ export default function JapaneseInvitation() {
           <SectionTitle kicker="INFORMATION" title="ご案内" />
           <ul className="notice-list jp-information-list">
             <li>会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にございます。</li>
-            <li>宿泊施設および移動手段につきましては、ご出欠を確認後、個別にご案内申し上げます。</li>
+            <li>宿泊施設および移動手段は、すべてこちらで手配いたしますので、どうぞご安心ください。</li>
             <li className="jp-response-note">ご出欠につきましては、誠に恐れ入りますが、このLINEのトークにてご返信くださいますようお願い申し上げます。</li>
           </ul>
         </section>

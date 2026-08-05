@@ -27,7 +27,7 @@ const timeline = [
   { time: '17:00', title: '受付・ウェルカムドリンク' },
   { time: '18:00', title: '挙式' },
   { time: '18:40', title: '挙式終了' },
-  { time: '19:00', title: 'ウェディングパーティー（アフターパーティー）' },
+  { time: '19:00', title: '祝宴・ウェディングパーティー' },
   { time: '21:00', title: '終了' },
 ]
 
@@ -71,7 +71,7 @@ export default function JapaneseInvitation() {
             <p className="invite-eyebrow">WEDDING INVITATION</p>
             <h1 className="invite-title">ユン・ウォンテ<br />&amp;<br />チョ・ヨンソ</h1>
             <p className="invite-date">2026年10月17日（土）18:00</p>
-            <p className="invite-venue">機張ルモスガーデン</p>
+            <p className="invite-venue">ルモスガーデン<br />韓国・釜山（プサン）／機張（キジャン）</p>
           </div>
           <div className="invite-hero-bottom">
             <p className="invite-hero-message">大切な皆さまをお招きします</p>
@@ -91,7 +91,7 @@ export default function JapaneseInvitation() {
             </div>
             <div>
               <dt>会場</dt>
-              <dd>ルモスガーデン（Lumos Garden）</dd>
+              <dd>ルモスガーデン（루모스가든 / Lumos Garden）</dd>
             </div>
           </dl>
         </section>
@@ -101,7 +101,7 @@ export default function JapaneseInvitation() {
           <dl className="essential-list">
             <div>
               <dt>場所</dt>
-              <dd>ルモスガーデン（Lumos Garden）</dd>
+              <dd>ルモスガーデン（루모스가든 / Lumos Garden）</dd>
             </div>
             <div>
               <dt>住所</dt>
@@ -109,6 +109,7 @@ export default function JapaneseInvitation() {
             </div>
           </dl>
           <p className="jp-location-note">会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にあります。</p>
+          <p className="jp-location-note">宿泊施設と移動手段をご用意しております。詳細は個別にご案内いたしますので、どうぞご安心ください。</p>
           <a className="btn btn-line jp-map-link" href={googleMapsUrl} target="_blank" rel="noreferrer">Google マップで場所を見る</a>
         </section>
 

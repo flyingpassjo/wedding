@@ -470,6 +470,13 @@
   text-align: center;
 }
 
+.jp-information-list .jp-response-note {
+  border-color: #dca3b7;
+  background: #fff0f5;
+  color: #7b4059;
+  font-weight: 700;
+}
+
 .cover-contact-open-btn {
   margin-top: 12px;
   border: 1px solid rgba(255, 255, 255, 0.66);

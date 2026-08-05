@@ -98,9 +98,16 @@ export default function JapaneseInvitation() {
               <dd>韓国・釜山広域市 機張郡 機張邑 機張海岸路 377</dd>
             </div>
           </dl>
-          <p className="jp-location-note">会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にあります。</p>
-          <p className="jp-location-note">宿泊施設と移動手段をご用意しております。詳細は個別にご案内いたしますので、どうぞご安心ください。</p>
           <a className="btn btn-line jp-map-link" href={googleMapsUrl} target="_blank" rel="noreferrer">Google マップで場所を見る</a>
+        </section>
+
+        <section className="card invite-card jp-information-card">
+          <SectionTitle kicker="INFORMATION" title="ご案内" />
+          <ul className="notice-list jp-information-list">
+            <li>会場は韓国・釜山（プサン）広域市の機張（キジャン）郡にあります。</li>
+            <li>宿泊施設と移動手段をご用意しております。詳細は個別にご案内いたしますので、どうぞご安心ください。</li>
+            <li className="jp-response-note">ご出欠につきましては、お手数ですが、このLINEのメッセージでご返信をお願いいたします。</li>
+          </ul>
         </section>
 
         <section className="card invite-card">

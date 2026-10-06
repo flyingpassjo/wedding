@@ -37,6 +37,19 @@ const SNAP_COLLAGE_IMAGES = {
   bride: withBase('images/snap-collage-right.jpg'),
 }
 
+const KAKAO_QUALITY_GUIDE_IMAGES = [
+  {
+    src: withBase('images/kakao-quality-step-1.jpg'),
+    title: '1. 오른쪽 아래 ··· 누르기',
+    alt: '카카오톡 사진 선택 화면 오른쪽 아래의 더보기 버튼 위치',
+  },
+  {
+    src: withBase('images/kakao-quality-step-2.jpg'),
+    title: '2. 사진 화질에서 원본 선택',
+    alt: '카카오톡 사진 화질 메뉴에서 원본을 선택한 화면',
+  },
+]
+
 const GALLERY_IMAGES = [
   'Wedding2.jpeg',
   'Wedding3.jpeg',
@@ -1614,14 +1627,21 @@ function App() {
             <p className="snap-guide-kicker">BEFORE YOU SHARE</p>
             <h4 id="snap-guide-title">사진은 원본 화질로 보내주세요</h4>
             <p className="snap-guide-desc">두 사람의 소중한 순간을 선명하게 간직할 수 있도록 전송 전에 화질을 확인해 주세요.</p>
+            <div className="snap-guide-gallery" aria-label="카카오톡 원본 화질 설정 화면">
+              {KAKAO_QUALITY_GUIDE_IMAGES.map((item, index) => (
+                <figure className={`snap-guide-image-card step-${index + 1}`} key={item.src}>
+                  <img src={item.src} alt={item.alt} />
+                  <figcaption>{item.title}</figcaption>
+                </figure>
+              ))}
+            </div>
             <div className="snap-guide-steps" aria-label="원본 화질 설정 방법">
-              <span>사진 선택</span>
+              <span>···</span>
               <b aria-hidden="true">→</b>
-              <span>··· 화질</span>
+              <span>사진 화질</span>
               <b aria-hidden="true">→</b>
               <strong>원본</strong>
             </div>
-            <p className="snap-guide-note">카카오톡 사진 선택 화면에서 원본을 선택한 뒤 보내주세요.</p>
             <a
               className="btn snap-guide-open-btn"
               href={snapUploadUrl}

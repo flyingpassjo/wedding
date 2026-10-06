@@ -1348,6 +1348,8 @@
 .snap-guide-modal {
   position: relative;
   width: min(430px, 100%);
+  max-height: 92svh;
+  overflow-y: auto;
   border: 1px solid #e2d5d9;
   border-radius: 24px;
   background: #fffafc;
@@ -1392,8 +1394,49 @@
   line-height: 1.7;
 }
 
+.snap-guide-gallery {
+  margin: 20px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+.snap-guide-image-card {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #eadfe2;
+  border-radius: 16px;
+  background: #f4eff1;
+}
+
+.snap-guide-image-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.snap-guide-image-card.step-2 img {
+  object-position: center 82%;
+}
+
+.snap-guide-image-card figcaption {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  border-radius: 999px;
+  background: rgba(35, 29, 31, 0.82);
+  color: #fff;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
 .snap-guide-steps {
-  margin-top: 20px;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1413,13 +1456,6 @@
 
 .snap-guide-steps strong {
   color: #8e5669;
-}
-
-.snap-guide-note {
-  margin: 14px 0 0;
-  color: #8c817d;
-  font-size: 12px;
-  line-height: 1.6;
 }
 
 .snap-guide-open-btn {

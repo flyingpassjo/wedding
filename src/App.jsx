@@ -37,19 +37,6 @@ const SNAP_COLLAGE_IMAGES = {
   bride: withBase('images/snap-collage-right.jpg'),
 }
 
-const KAKAO_QUALITY_GUIDE_IMAGES = [
-  {
-    src: withBase('images/kakao-quality-step-1.jpg'),
-    title: '1. 오른쪽 아래 ··· 누르기',
-    alt: '카카오톡 사진 선택 화면 오른쪽 아래의 더보기 버튼 위치',
-  },
-  {
-    src: withBase('images/kakao-quality-step-2.jpg'),
-    title: '2. 사진 화질에서 원본 선택',
-    alt: '카카오톡 사진 화질 메뉴에서 원본을 선택한 화면',
-  },
-]
-
 const GALLERY_IMAGES = [
   'Wedding2.jpeg',
   'Wedding3.jpeg',
@@ -1627,13 +1614,25 @@ function App() {
             <p className="snap-guide-kicker">BEFORE YOU SHARE</p>
             <h4 id="snap-guide-title">사진은 원본 화질로 보내주세요</h4>
             <p className="snap-guide-desc">두 사람의 소중한 순간을 선명하게 간직할 수 있도록 전송 전에 화질을 확인해 주세요.</p>
-            <div className="snap-guide-gallery" aria-label="카카오톡 원본 화질 설정 화면">
-              {KAKAO_QUALITY_GUIDE_IMAGES.map((item, index) => (
-                <figure className={`snap-guide-image-card step-${index + 1}`} key={item.src}>
-                  <img src={item.src} alt={item.alt} />
-                  <figcaption>{item.title}</figcaption>
-                </figure>
-              ))}
+            <div className="snap-guide-visuals" aria-label="카카오톡 원본 화질 설정 방법">
+              <figure className="snap-guide-visual-card">
+                <div className="kakao-toolbar-mock" aria-hidden="true">
+                  <span className="kakao-bundle-check">✓</span>
+                  <span className="kakao-bundle-label">사진 묶어보내기</span>
+                  <span className="kakao-toolbar-loader">✦</span>
+                  <span className="kakao-more-button">•••</span>
+                </div>
+                <figcaption><b>1</b> 오른쪽 아래 <strong>···</strong> 누르기</figcaption>
+              </figure>
+              <figure className="snap-guide-visual-card">
+                <div className="kakao-quality-menu-mock" aria-hidden="true">
+                  <span className="kakao-quality-title">사진</span>
+                  <span>저용량</span>
+                  <span>일반 화질</span>
+                  <strong><b>✓</b> 원본</strong>
+                </div>
+                <figcaption><b>2</b> 사진 화질에서 <strong>원본</strong> 선택</figcaption>
+              </figure>
             </div>
             <div className="snap-guide-steps" aria-label="원본 화질 설정 방법">
               <span>···</span>

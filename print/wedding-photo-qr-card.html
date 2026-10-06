@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>웨딩 사진 공유 QR</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 1600px;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        background: #fffaf8;
+        color: #352d2a;
+        font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      }
+
+      main {
+        width: 1040px;
+        height: 1440px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #d8c8c3;
+        background: #fffdfc;
+        padding: 90px;
+        text-align: center;
+      }
+
+      .kicker {
+        margin: 0 0 34px;
+        color: #9e8279;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 28px;
+        letter-spacing: 0.28em;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "AppleMyungjo", "Nanum Myeongjo", serif;
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 1.45;
+      }
+
+      .copy {
+        margin: 30px 0 48px;
+        color: #665b57;
+        font-size: 30px;
+        line-height: 1.75;
+      }
+
+      .qr-wrap {
+        width: 620px;
+        height: 620px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #eaded9;
+        background: #fff;
+        padding: 42px;
+      }
+
+      .qr-wrap img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+
+      .scan-label {
+        margin: 38px 0 0;
+        color: #9e8279;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        letter-spacing: 0.22em;
+      }
+
+      .names {
+        margin: 24px 0 0;
+        color: #766963;
+        font-size: 24px;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="kicker">CAPTURE OUR MOMENTS</p>
+      <h1>소중한 순간을 함께 나눠주세요!</h1>
+      <p class="copy">QR 코드를 스캔하여<br />오늘의 예쁜 사진을 남겨주세요.</p>
+      <div class="qr-wrap">
+        <img src="wedding-photo-upload-qr.png" alt="웨딩 사진 공유 QR 코드" />
+      </div>
+      <p class="scan-label">SCAN TO SHARE</p>
+      <p class="names">윤원태 · 조영서</p>
+    </main>
+  </body>
+</html>

@@ -249,6 +249,11 @@ function getInitialScreen() {
   return window.location.hash === '#/admin' ? 'admin' : 'guest'
 }
 
+function isDirectSnapGuideEntry() {
+  if (typeof window === 'undefined') return false
+  return new URLSearchParams(window.location.search).get('snap') === '1'
+}
+
 function getOrCreateVisitorId() {
   const storageKey = 'wedding_visitor_id'
   const existing = localStorage.getItem(storageKey)
@@ -529,19 +534,20 @@ function ContactAccountGroup({ group, expandedAccountKeys, onToggleAccount, onCo
 }
 
 function App() {
+  const directSnapGuideEntry = isDirectSnapGuideEntry()
   const [screen, setScreen] = useState(getInitialScreen)
   const [toast, setToast] = useState('')
   const [mapBroken, setMapBroken] = useState(false)
   const [openingImageBroken, setOpeningImageBroken] = useState(false)
   const [coverImageBroken, setCoverImageBroken] = useState(false)
-  const [showOpening, setShowOpening] = useState(() => getInitialScreen() === 'guest')
+  const [showOpening, setShowOpening] = useState(() => getInitialScreen() === 'guest' && !directSnapGuideEntry)
   const [openingFade, setOpeningFade] = useState(false)
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
-  const [isSnapGuideOpen, setIsSnapGuideOpen] = useState(false)
+  const [isSnapGuideOpen, setIsSnapGuideOpen] = useState(directSnapGuideEntry)
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(null)
   const [expandedAccountKeys, setExpandedAccountKeys] = useState({})
-  const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(false)
+  const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(directSnapGuideEntry)
 
   const [rsvp, setRsvp] = useState(RSVP_INITIAL)
 
@@ -706,7 +712,14 @@ function App() {
   }, [showOpening])
 
   useEffect(() => {
-    if (screen !== 'guest' || showOpening || hasAutoOpenedRsvp || isRsvpModalOpen || isContactModalOpen) return undefined
+    if (
+      screen !== 'guest' ||
+      showOpening ||
+      hasAutoOpenedRsvp ||
+      isRsvpModalOpen ||
+      isContactModalOpen ||
+      isSnapGuideOpen
+    ) return undefined
 
     const timer = setTimeout(() => {
       setIsRsvpModalOpen(true)
@@ -714,7 +727,7 @@ function App() {
     }, 220)
 
     return () => clearTimeout(timer)
-  }, [screen, showOpening, hasAutoOpenedRsvp, isRsvpModalOpen, isContactModalOpen])
+  }, [screen, showOpening, hasAutoOpenedRsvp, isRsvpModalOpen, isContactModalOpen, isSnapGuideOpen])
 
   useEffect(() => {
     if (typeof window === 'undefined') return

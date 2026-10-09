@@ -544,7 +544,6 @@ function App() {
   const [openingFade, setOpeningFade] = useState(false)
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
-  const [isSnapGuideOpen, setIsSnapGuideOpen] = useState(directSnapGuideEntry)
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(null)
   const [expandedAccountKeys, setExpandedAccountKeys] = useState({})
   const [hasAutoOpenedRsvp, setHasAutoOpenedRsvp] = useState(directSnapGuideEntry)
@@ -654,6 +653,11 @@ function App() {
   }, [])
 
   useEffect(() => {
+    if (!directSnapGuideEntry) return
+    window.location.replace(OPEN_CHAT_URL)
+  }, [directSnapGuideEntry])
+
+  useEffect(() => {
     if (!toast) return undefined
     const timeout = setTimeout(() => setToast(''), 2000)
     return () => clearTimeout(timeout)
@@ -673,14 +677,13 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (!isRsvpModalOpen && !isContactModalOpen && !isSnapGuideOpen && selectedGalleryIndex == null) return undefined
+    if (!isRsvpModalOpen && !isContactModalOpen && selectedGalleryIndex == null) return undefined
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
         setIsRsvpModalOpen(false)
         setIsContactModalOpen(false)
-        setIsSnapGuideOpen(false)
         setSelectedGalleryIndex(null)
       }
       if (selectedGalleryIndex != null && event.key === 'ArrowRight') {
@@ -697,7 +700,7 @@ function App() {
       window.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = prev
     }
-  }, [isRsvpModalOpen, isContactModalOpen, isSnapGuideOpen, selectedGalleryIndex])
+  }, [isRsvpModalOpen, isContactModalOpen, selectedGalleryIndex])
 
   useEffect(() => {
     if (!showOpening) return undefined
@@ -712,14 +715,7 @@ function App() {
   }, [showOpening])
 
   useEffect(() => {
-    if (
-      screen !== 'guest' ||
-      showOpening ||
-      hasAutoOpenedRsvp ||
-      isRsvpModalOpen ||
-      isContactModalOpen ||
-      isSnapGuideOpen
-    ) return undefined
+    if (screen !== 'guest' || showOpening || hasAutoOpenedRsvp || isRsvpModalOpen || isContactModalOpen) return undefined
 
     const timer = setTimeout(() => {
       setIsRsvpModalOpen(true)
@@ -727,7 +723,7 @@ function App() {
     }, 220)
 
     return () => clearTimeout(timer)
-  }, [screen, showOpening, hasAutoOpenedRsvp, isRsvpModalOpen, isContactModalOpen, isSnapGuideOpen])
+  }, [screen, showOpening, hasAutoOpenedRsvp, isRsvpModalOpen, isContactModalOpen])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -839,14 +835,6 @@ function App() {
 
   const closeContactModal = () => {
     setIsContactModalOpen(false)
-  }
-
-  const openSnapGuide = () => {
-    setIsSnapGuideOpen(true)
-  }
-
-  const closeSnapGuide = () => {
-    setIsSnapGuideOpen(false)
   }
 
   const openGalleryModal = useCallback((index) => {
@@ -1350,9 +1338,9 @@ function App() {
               <p>사진과 영상을 자유롭게 보내주세요.</p>
               <p>많은 참여 부탁드려요!</p>
             </div>
-            <button type="button" className="btn snap-upload-btn" onClick={openSnapGuide}>
+            <a className="btn snap-upload-btn" href={snapUploadUrl} target="_blank" rel="noreferrer">
               카카오 오픈채팅으로 보내기
-            </button>
+            </a>
             <p className="snap-open-note">
               오픈채팅방은 언제든 접속 가능합니다.
             </p>
@@ -1614,55 +1602,6 @@ function App() {
             <button type="button" className="gallery-modal-arrow next" onClick={showNextGalleryImage} aria-label="다음 사진">
               ›
             </button>
-          </section>
-        </div>
-      ) : null}
-
-      {isGuestScreen && isSnapGuideOpen ? (
-        <div className="rsvp-modal-backdrop" onClick={closeSnapGuide} role="dialog" aria-modal="true" aria-labelledby="snap-guide-title">
-          <section className="snap-guide-modal" onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="snap-guide-close" onClick={closeSnapGuide} aria-label="원본 화질 안내 닫기">
-              닫기 X
-            </button>
-            <p className="snap-guide-kicker">BEFORE YOU SHARE</p>
-            <h4 id="snap-guide-title">사진은 원본 화질로 보내주세요</h4>
-            <p className="snap-guide-desc">두 사람의 소중한 순간을 선명하게 간직할 수 있도록 전송 전에 화질을 확인해 주세요.</p>
-            <div className="snap-guide-visuals" aria-label="카카오톡 원본 화질 설정 방법">
-              <figure className="snap-guide-visual-card">
-                <div className="kakao-toolbar-mock" aria-hidden="true">
-                  <span className="kakao-bundle-check">✓</span>
-                  <span className="kakao-bundle-label">사진 묶어보내기</span>
-                  <span className="kakao-toolbar-loader">✦</span>
-                  <span className="kakao-more-button">•••</span>
-                </div>
-                <figcaption><b>1</b> 오른쪽 아래 <strong>···</strong> 누르기</figcaption>
-              </figure>
-              <figure className="snap-guide-visual-card">
-                <div className="kakao-quality-menu-mock" aria-hidden="true">
-                  <span className="kakao-quality-title">사진</span>
-                  <span>저용량</span>
-                  <span>일반 화질</span>
-                  <strong><b>✓</b> 원본</strong>
-                </div>
-                <figcaption><b>2</b> 사진 화질에서 <strong>원본</strong> 선택</figcaption>
-              </figure>
-            </div>
-            <div className="snap-guide-steps" aria-label="원본 화질 설정 방법">
-              <span>···</span>
-              <b aria-hidden="true">→</b>
-              <span>사진 화질</span>
-              <b aria-hidden="true">→</b>
-              <strong>원본</strong>
-            </div>
-            <a
-              className="btn snap-guide-open-btn"
-              href={snapUploadUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={closeSnapGuide}
-            >
-              확인하고 오픈채팅방으로 이동
-            </a>
           </section>
         </div>
       ) : null}
